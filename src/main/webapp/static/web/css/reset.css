@@ -1,0 +1,135 @@
+@charset "utf-8";
+
+/* CSS Document */
+
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+code,
+form,
+fieldset,
+legend,
+input,
+button,
+textarea,
+p,
+blockquote,
+th,
+td {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-family: "微软雅黑", Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	color: #333;
+}
+
+a:link,
+a:visited {
+	text-decoration: none;
+}
+
+a:hover,
+a:active {
+	text-decoration: none;
+	color: #018fe5;
+}
+
+fieldset,
+img {
+	border: none;
+}
+
+img {
+	vertical-align: middle;
+}
+
+em,
+i {
+	font-style: normal;
+}
+
+ul {
+	list-style: none;
+}
+
+li {
+	list-style: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-size: 20px;
+}
+
+h3,
+a {
+	color: #2d2d2d;
+}
+
+input,
+button,
+textarea,
+select {
+	font-family: inherit;
+	font-size: inherit;
+	font-weight: inherit;
+	border: 0;
+}
+
+input,
+button,
+textarea,
+select {
+	*font-size: 100%;
+}
+
+.hide {
+	display: none;
+}
+
+.shadow {
+	box-shadow: 0 0 20px rgba(0, 0, 0, .1);
+	-webkit-box-shadow: 0 0 20px rgba(0, 0, 0, .1);
+	-o-box-shadow: 0 0 20px rgba(0, 0, 0, .1);
+	-moz-box-shadow: 0 0 20px rgba(0, 0, 0, .1);
+}
+
+.inshadow {
+	box-shadow: 0 1px 15px rgba(0, 0, 0, .2) inset;
+	-webkit-box-shadow: 0 1px 15px rgba(0, 0, 0, .2) inset;
+	-o-box-shadow: 0 1px 15px rgba(0, 0, 0, .2) inset;
+	-moz-box-shadow: 0 1px 15px rgba(0, 0, 0, .2) inset;
+}
+
+.text-hidden {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.clearfix:after {
+	content: '';
+	display: block;
+	clear: both;
+}
+
+

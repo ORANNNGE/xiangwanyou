@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.cms.mapper.ArticleMapper">
+
+    <sql id="articleColumns">
+		a.id AS "id",
+		a.category_id AS "category.id",
+		a.title AS "title",
+		a.link AS "link",
+		a.color AS "color",
+		a.image AS "image",
+		a.is_pic AS "isPic",
+		a.keywords AS "keywords",
+		a.description AS "description",
+		a.stick AS "stick",
+		a.hits AS "hits",
+		a.content AS "content",
+		a.copyfrom AS "copyfrom",
+		a.tags AS "tags",
+		a.relation AS "relation",
+		a.attach_type AS "attachType",
+		a.attach_url AS "attachUrl",
+		a.attach_size AS "attachSize",
+		a.status AS "status",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.sign_count AS "signCount",
+		a.agree_count AS "agreeCount",
+		a.audit_date AS "auditDate",
+		a.publish_date AS "publishDate",
+		c.name AS "category.name",
+		u.name AS "user.name"
+	</sql>
+
+    <sql id="articleJoins">
+		JOIN cms_category c ON c.id = a.category_id
+		JOIN sys_office o ON o.id = c.office_id
+		JOIN sys_user u ON u.id = a.create_by
+	</sql>
+
+    <select id="countAll" resultType="Long">
+		SELECT COUNT(*) FROM cms_article
+	</select>
+
+    <select id="get" resultType="Article">
+        SELECT
+        <include refid="articleColumns"/>
+        FROM cms_article a
+        <include refid="articleJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="Article">
+        SELECT
+        <include refid="articleColumns"/>
+        FROM cms_article a
+        <include refid="articleJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="category.id != null and category.id != ''">
+                AND a.category_id = #{category.id}
+            </if>
+            <if test="isPic != null and isPic != ''">
+                AND a.is_pic =#{isPic}
+            </if>
+            <if test="title != null and title != ''">
+                AND a.title LIKE
+                <if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+            </if>
+            <if test="stick != null and stick != ''">
+                AND a.stick = #{stick}
+            </if>
+            <if test="status != null and status != ''">
+                AND a.status = #{status}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="Article">
+        SELECT
+        <include refid="articleColumns"/>
+        FROM cms_article a
+        <include refid="articleJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            ${dataScope}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO cms_article(
+			id,
+			category_id,
+			title,
+			link,
+			color,
+			image,
+			is_pic,
+			keywords,
+			description,
+			stick,
+			hits,
+			content,
+			copyfrom,
+			tags,
+			relation,
+			attach_type,
+			attach_url,
+			attach_size,
+			status,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			sign_count,
+			agree_count
+		) VALUES (
+			#{id},
+			#{category.id},
+			#{title},
+			#{link},
+			#{color},
+			#{image},
+			#{isPic},
+			#{keywords},
+			#{description},
+			#{stick},
+			#{hits},
+			#{content},
+			#{copyfrom},
+			#{tags},
+			#{relation},
+			#{attachType},
+			#{attachUrl},
+			#{attachSize},
+			#{status},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{signCount},
+			#{agreeCount}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE cms_article SET 	
+			category_id = #{category.id},
+			title = #{title},
+			link = #{link},
+			color = #{color},
+			image = #{image},
+			keywords = #{keywords},
+			description = #{description},
+			stick = #{stick},
+			hits = #{hits},
+			content = #{content},
+			copyfrom = #{copyfrom},
+			tags = #{tags},
+			relation = #{relation},
+			attach_type = #{attachType},
+			attach_url = #{attachUrl},
+			attach_size = #{attachSize},
+			status = #{status},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			sign_count = #{signCount},
+			agree_count = #{agreeCount}
+		WHERE id = #{id}
+	</update>
+
+
+    <!--物理删除-->
+    <update id="delete">
+		DELETE FROM cms_article
+		WHERE id = #{id}
+	</update>
+
+    <!--逻辑删除-->
+    <update id="deleteByLogic">
+		UPDATE cms_article SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+
+    <!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+    <select id="findUniqueByProperty" resultType="Article" statementType="STATEMENT">
+		select * FROM cms_article  where ${propertyName} = '${value}'
+	</select>
+
+
+    <select id="findByIdIn" resultType="Article">
+        SELECT
+        <include refid="articleColumns"/>
+        from cms_article a where
+        <where>
+            id in (${id});
+        </where>
+    </select>
+
+
+    <update id="updateHitsAddOne">
+		update cms_article set
+			 hits = hits+1
+		 WHERE id = #{id}
+	</update>
+
+    <update id="updateStatus">
+		update cms_article set
+			 audit_date =#{auditDate},
+			 publish_date =#{publishDate},
+			 update_date = #{updateDate},
+			 status=#{status}
+		 WHERE id = #{id}
+	</update>
+
+    <update id="updateAgreeAddOne">
+		UPDATE cms_article SET
+			agree_count=agree_count=1
+		WHERE id = #{id}
+	</update>
+
+    <update id="updateSignAddOne">
+		UPDATE cms_article SET
+			sign_count=sign_count+1
+		WHERE id = #{id}
+	</update>
+</mapper>

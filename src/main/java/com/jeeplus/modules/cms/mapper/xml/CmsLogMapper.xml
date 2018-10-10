@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.cms.mapper.CmsLogMapper">
+
+    <sql id="cmsLogColumns">
+		a.id AS "id",
+		a.article_id AS "articleId",
+		a.title AS "title",
+		a.user_id AS "userId",
+		a.user_name AS "userName",
+		a.create_date AS "createDate",
+		a.remote_addr AS "remoteAddr",
+		a.type AS "type"
+	</sql>
+
+    <sql id="cmsLogJoins">
+
+    </sql>
+
+
+    <select id="get" resultType="CmsLog">
+        SELECT
+        <include refid="cmsLogColumns"/>
+        FROM cms_log a
+        <include refid="cmsLogJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="CmsLog">
+        SELECT
+        <include refid="cmsLogColumns"/>
+        FROM cms_log a
+        <include refid="cmsLogJoins"/>
+        <where>
+
+            ${dataScope}
+            <if test="articleId != null and articleId != ''">
+                AND a.article_id = #{articleId}
+            </if>
+            <if test="title != null and title != ''">
+                AND a.title LIKE
+                <if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+            </if>
+            <if test="userId != null and userId != ''">
+                AND a.user_id = #{userId}
+            </if>
+            <if test="userName != null and userName != ''">
+                AND a.user_name = #{userName}
+            </if>
+            <if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
+                AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>ORDER BY a.create_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="CmsLog">
+        SELECT
+        <include refid="cmsLogColumns"/>
+        FROM cms_log a
+        <include refid="cmsLogJoins"/>
+        <where>
+
+            ${dataScope}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO cms_log(
+			id,
+			article_id,
+			title,
+			user_id,
+			user_name,
+			create_date,
+			remote_addr,
+			type
+		) VALUES (
+			#{id},
+			#{articleId},
+			#{title},
+			#{userId},
+			#{userName},
+			#{createDate},
+			#{remoteAddr},
+			#{type}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE cms_log SET 	
+			article_id = #{articleId},
+			title = #{title},
+			user_id = #{userId},
+			user_name = #{userName},
+			remote_addr = #{remoteAddr},
+			type = #{type}
+		WHERE id = #{id}
+	</update>
+
+
+    <!--物理删除-->
+    <update id="delete">
+		DELETE FROM cms_log
+		WHERE id = #{id}
+	</update>
+
+    <!--逻辑删除-->
+    <update id="deleteByLogic">
+		UPDATE cms_log SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+
+    <!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+    <select id="findUniqueByProperty" resultType="CmsLog" statementType="STATEMENT">
+		select * FROM cms_log  where ${propertyName} = '${value}'
+	</select>
+
+</mapper>

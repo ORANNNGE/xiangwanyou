@@ -1,0 +1,5 @@
+##ignore this file##
+/.idea/*
+/.svn/*
+/target/*
+*.iml

@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.weixin.mapper.WxFansMapper">
+    
+	<sql id="wxFansColumns">
+		a.id AS "id",
+		a.open_id AS "openId",
+		a.subscribe_status AS "subscribeStatus",
+		a.subscribe_time AS "subscribeTime",
+		a.nick_name AS "nickName",
+		a.sex AS "sex",
+		a.language AS "language",
+		a.country AS "country",
+		a.province AS "province",
+		a.city AS "city",
+		a.head_img_url AS "headImgUrl",
+		a.status AS "status",
+		a.remark AS "remark",
+		a.wx_id AS "wxId",
+		a.sort,
+		a.create_date AS "createDate",
+		a.account AS "account"
+	</sql>
+	
+	<sql id="wxFansJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="WxFans" >
+		SELECT 
+			<include refid="wxFansColumns"/>
+		FROM wx_fans a
+		<include refid="wxFansJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getByOpenId" resultType="WxFans">
+		SELECT
+		<include refid="wxFansColumns"/>
+		FROM wx_fans a
+		<include refid="wxFansJoins"/>
+		WHERE a.open_id = #{openId}
+	</select>
+	
+	<select id="findList" resultType="WxFans" >
+		SELECT 
+			<include refid="wxFansColumns"/>
+		FROM wx_fans a
+		<include refid="wxFansJoins"/>
+		<where>
+			<if test="openId != null and openId != ''">
+				AND a.open_id = #{openId}
+			</if>
+			<if test="sex != null and sex != ''">
+				AND a.sex = #{sex}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+			<if test="account != null and account != ''">
+				AND a.account = #{account}
+			</if>
+			<if test="nicknameStr != null and nicknameStr != ''">
+				AND a.nick_name
+				LIKE
+				<if test="dbName == 'oracle'">'%'||#{nicknameStr}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{nicknameStr}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{nicknameStr},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WxFans" >
+		SELECT 
+			<include refid="wxFansColumns"/>
+		FROM wx_fans a
+		<include refid="wxFansJoins"/>
+		<where>
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wx_fans(
+			id,
+			open_id,
+			subscribe_status,
+			subscribe_time,
+			nick_name,
+			sex,
+			language,
+			country,
+			province,
+			city,
+			head_img_url,
+			status,
+			remark,
+			wx_id,
+			sort,
+			create_date,
+			account
+		) VALUES (
+			#{id},
+			#{openId},
+			#{subscribeStatus},
+			#{subscribeTime},
+			#{nickName},
+			#{sex},
+			#{language},
+			#{country},
+			#{province},
+			#{city},
+			#{headImgUrl},
+			#{status},
+			#{remark},
+			#{wxId},
+			#{sort},
+			#{createDate},
+			#{account}
+		)
+	</insert>
+
+	<insert id="addList" parameterType="list">
+		INSERT INTO wx_fans(
+			id,
+			open_id,
+			subscribe_status,
+			subscribe_time,
+			nick_name,
+			sex,
+			language,
+			country,
+			province,
+			city,
+			head_img_url,
+			status,
+			remark,
+			wx_id,
+			create_date,
+			account
+		) VALUES
+		<foreach  collection="list" item="item" index="index" separator="," >
+			<![CDATA[
+            ( #{id},
+			#{openId},
+			#{subscribeStatus},
+			#{subscribeTime},
+			#{nickName},
+			#{sex},
+			#{language},
+			#{country},
+			#{province},
+			#{city},
+			#{headImgUrl},
+			#{status},
+			#{remark},
+			#{wxId},
+			#{createDate},
+			#{account}) ]]>
+		</foreach>
+
+	</insert>
+	
+	<update id="update">
+		UPDATE wx_fans SET 	
+			open_id = #{openId},
+			subscribe_status = #{subscribeStatus},
+			subscribe_time = #{subscribeTime},
+			nick_name = #{nickName},
+			sex = #{sex},
+			language = #{language},
+			country = #{country},
+			province = #{province},
+			city = #{city},
+			head_img_url = #{headImgUrl},
+			status = #{status},
+			remark = #{remark},
+			wx_id = #{wxId},
+			account = #{account}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM wx_fans
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE wx_fans SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="WxFans" statementType="STATEMENT">
+		select * FROM wx_fans  where ${propertyName} = '${value}'
+	</select>
+
+	<select id="getLastOpenId" resultType="WxFans">
+		SELECT * FROM wx_fans
+		ORDER BY sort DESC
+		LIMIT 0 , 1
+	</select>
+</mapper>

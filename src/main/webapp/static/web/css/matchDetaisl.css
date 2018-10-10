@@ -1,0 +1,132 @@
+@charset "utf-8";
+@import url("reset.css");
+@import url("iconfont.css");
+@import url("index.css");
+
+/*赛事详情*/
+
+.matchDetailsBox {
+	width: 1100px;
+	margin: 50px auto;
+}
+
+.matchDetailsImg-l {
+	float: left;
+	width: 550px;
+	height: 310px;
+	overflow: hidden;
+}
+
+.matchDetailsImg-l img {
+	width: 550px;
+	height: 310px;
+}
+
+.matchDetailsImg-r {
+	position: relative;
+	float: right;
+	width: 520px;
+	height: 310px;
+	background: #F5F5F5;
+	box-sizing: border-box;
+	padding: 20px 30px;
+}
+
+.matchDetailsImg-r h3 {
+	font-size: 18px;
+	padding-bottom: 10px;
+}
+
+.matchDetailsImg-r p {
+	margin: 15px 0;
+	color: #666;
+}
+
+.matchDetailsImg-r p span {
+	color: #333;
+	padding-right: 5px;
+}
+
+.matchDetailsImg-r p em {
+	color: #999;
+	padding: 0 8px;
+}
+
+.matchDetailsImg-r p i {
+	color: #FF9600;
+	font-size: 18px;
+}
+
+
+/*赛事说明*/
+
+.matchStatment {
+	width: 1100px;
+	margin: 30px auto;
+}
+
+.matchStatment h3 {
+	text-align: center;
+	font-size: 16px;
+	font-weight: normal;
+}
+
+.matchStatmentNr {
+	background: #F5F5F5;
+	padding: 20px 30px;
+	margin-top: 15px;
+	border-top: 1px solid #ddd;
+}
+
+.matchStatmentNr p {
+	line-height: 1.6;
+	text-indent: 2em;
+}
+
+
+/*我要报名*/
+
+.woyaoBMBox {
+	position: absolute;
+	right: 30px;
+	bottom: 20px;
+}
+
+.woyaoBM {
+	display: block;
+	width: 90px;
+	height: 32px;
+	line-height: 32px;
+	text-align: center;
+	border: 1px solid #018FE5;
+	border-radius: 5px;
+	color: #018FE5;
+}
+
+
+.woyaoBM1 {
+	display: block;
+	width: 90px;
+	height: 32px;
+	line-height: 32px;
+	text-align: center;
+	border: 1px solid #018FE5;
+	border-radius: 5px;
+	color: #c0c4cd;
+}
+
+.BMerweima {
+	position: absolute;
+	display: none;
+	top: 40px;
+	left: -5px;
+	width: 90px;
+	height: 90px;
+	border: 5px solid #FFF;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, .2);
+}
+
+.BMerweima img {
+	width: 90px;
+	height: 90px;
+}

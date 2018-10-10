@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.weixin.mapper.WxMenuMapper">
+    
+	<sql id="wxMenuColumns">
+		a.id AS "id",
+		a.mtype AS "mtype",
+		a.event_type AS "eventType",
+		a.title AS "title",
+		a.input_code AS "inputCode",
+		a.url AS "url",
+		a.sort AS "sort",
+		a.parent_id AS "parentId",
+		a.msg_type AS "msgType",
+		a.msg_id AS "msgId",
+		a.gid AS "gid",
+		a.account AS "account",
+		a.create_date AS "createDate"
+	</sql>
+	
+	<sql id="wxMenuJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="WxMenu" >
+		SELECT 
+			<include refid="wxMenuColumns"/>
+		FROM wx_menu a
+		<include refid="wxMenuJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WxMenu" >
+		SELECT 
+			<include refid="wxMenuColumns"/>
+		FROM wx_menu a
+		<include refid="wxMenuJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="title != null and title != ''">
+				AND a.title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+			<if test="url != null and url != ''">
+				AND a.url = #{url}
+			</if>
+			<if test="parentId != null and parentId != ''">
+				AND a.parent_id = #{parentId}
+			</if>
+			<if test="gid != null and gid != ''">
+				AND a.gid = #{gid}
+			</if>
+			<if test="account != null and account != ''">
+				AND a.account = #{account}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WxMenu" >
+		SELECT 
+			<include refid="wxMenuColumns"/>
+		FROM wx_menu a
+		<include refid="wxMenuJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wx_menu(
+			id,
+			mtype,
+			event_type,
+			title,
+			input_code,
+			url,
+			sort,
+			parent_id,
+			msg_type,
+			msg_id,
+			gid,
+			account,
+			create_date
+		) VALUES (
+			#{id},
+			#{mtype},
+			#{eventType},
+			#{title},
+			#{inputCode},
+			#{url},
+			#{sort},
+			#{parentId},
+			#{msgType},
+			#{msgId},
+			#{gid},
+			#{account},
+			#{createDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wx_menu SET 	
+			mtype = #{mtype},
+			event_type = #{eventType},
+			title = #{title},
+			input_code = #{inputCode},
+			url = #{url},
+			sort = #{sort},
+			parent_id = #{parentId},
+			msg_type = #{msgType},
+			msg_id = #{msgId},
+			gid = #{gid},
+			account = #{account},
+			create_date = #{createDate}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM wx_menu
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE wx_menu SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="WxMenu" statementType="STATEMENT">
+		select * FROM wx_menu  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

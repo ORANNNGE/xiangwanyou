@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.cms.mapper.CategoryMapper">
+
+    <resultMap id="categoryResult" type="Category">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="sort" column="sort"/>
+        <result property="parentIds" column="parent_ids"/>
+        <result property="module" column="module"/>
+        <result property="image" column="image"/>
+        <result property="href" column="href"/>
+        <result property="target" column="target"/>
+        <result property="description" column="description"/>
+        <result property="keywords" column="keywords"/>
+        <result property="inMenu" column="inMenu"/>
+        <result property="inList" column="inList"/>
+        <association property="office" column="office_id" select="getOffice"/>
+        <association property="site" column="site_id" select="getSite"/>
+        <association property="hasChildren" column="id" select="hasChildren"/>
+    </resultMap>
+
+    <sql id="categoryColumns">
+		a.id AS "id",
+		a.parent_id AS "parent.id",
+		a.parent_ids AS	"parentIds",
+		a.site_id AS "site.id",
+		a.office_id AS "office.id",
+		a.module AS "module",
+		a.name AS "name",
+		a.image AS "image",
+		a.href AS "href",
+		a.target AS "target",
+		a.description AS "description",
+		a.keywords	AS "keywords",
+		a.sort AS "sort",
+		a.in_menu AS "inMenu",
+		a.in_list AS "inList",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		c.name AS "parent.name",
+		o.name AS "office.name"
+	</sql>
+
+    <sql id="categoryJoins">
+        LEFT JOIN cms_category c ON c.id = a.parent_id
+		JOIN sys_office o  ON o.id = a.office_id
+		JOIN cms_site s ON a.site_id = s.id
+	</sql>
+
+
+    <select id="get" resultType="Category">
+        SELECT
+        <include refid="categoryColumns"/>
+        FROM cms_category a
+        <include refid="categoryJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="Category">
+        SELECT
+        <include refid="categoryColumns"/>
+        FROM cms_category a
+        <include refid="categoryJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            ${dataScope}
+            <if test="parent != null and parent.id != null and parent.id != ''">
+                AND a.parent_id = #{parent.id}
+            </if>
+            <if test="parentIds != null and parentIds != ''">
+                AND a.parent_ids LIKE
+                <if test="dbName == 'oracle'">'%'||#{parentIds}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{parentIds}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{parentIds},'%')</if>
+            </if>
+
+            <if test="office != null and office.id != null and office.id != ''">
+                AND a.office_id = #{office.id}
+            </if>
+            <if test="module != null and module != ''">
+                AND a.module = #{module}
+            </if>
+            <if test="name != null and name != ''">
+                AND a.name LIKE
+                <if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+            </if>
+            <if test="inMenu != null and inMenu != ''">
+                AND a.in_menu = #{inMenu}
+            </if>
+            <if test="inList != null and inList != ''">
+                AND a.in_list = #{inList}
+            </if>
+        </where>
+        ORDER BY a.sort ASC
+    </select>
+
+    <select id="findAllList" resultType="Category">
+        SELECT
+        <include refid="categoryColumns"/>
+        FROM cms_category a
+        <include refid="categoryJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            ${dataScope}
+        </where>
+        ORDER BY a.sort ASC
+    </select>
+
+    <select id="getChildren" parameterType="String" resultMap="categoryResult">
+        select * from cms_category where parent_id =#{id} ORDER BY sort
+    </select>
+
+    <select id="getOffice" parameterType="String" resultType="Office">
+        select * from sys_office where id = #{id}
+    </select>
+    <select id="getSite" parameterType="String" resultType="Site">
+        select * from cms_site where id = #{id}
+    </select>
+    <select id="hasChildren" parameterType="String" resultType="Boolean">
+        select case when exists(select 1 from cms_category  where site_id =1 and parent_id = #{id}) then 1 else 0 end ${dual}
+    </select>
+
+
+    <insert id="insert">
+		INSERT INTO cms_category(
+			id,
+			parent_id,
+			parent_ids,
+			site_id,
+			office_id,
+			module,
+			name,
+			image,
+			href,
+			target,
+			description,
+			keywords,
+			sort,
+			in_menu,
+			in_list,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{parent.id},
+			#{parentIds},
+			#{site.id},
+			#{office.id},
+			#{module},
+			#{name},
+			#{image},
+			#{href},
+			#{target},
+			#{description},
+			#{keywords},
+			#{sort},
+			#{inMenu},
+			#{inList},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE cms_category SET 	
+			parent_id = #{parent.id},
+			parent_ids = #{parentIds},
+			site_id = #{site.id},
+			office_id = #{office.id},
+			module = #{module},
+			name = #{name},
+			image = #{image},
+			href = #{href},
+			target = #{target},
+			description = #{description},
+			keywords = #{keywords},
+			sort = #{sort},
+			in_menu = #{inMenu},
+			in_list = #{inList},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+
+
+    <!--物理删除-->
+    <update id="delete">
+        DELETE FROM cms_category
+        WHERE id = #{id} OR parent_ids LIKE
+        <if test="dbName == 'oracle'">'%,'||#{id}||',%'</if>
+        <if test="dbName == 'mssql'">'%,'+#{id}+',%'</if>
+        <if test="dbName == 'mysql'">CONCAT('%,', #{id}, ',%')</if>
+    </update>
+
+    <!--逻辑删除-->
+    <update id="deleteByLogic">
+        UPDATE cms_category SET
+        del_flag = #{DEL_FLAG_DELETE}
+        WHERE id = #{id} OR parent_ids LIKE
+        <if test="dbName == 'oracle'">'%,'||#{id}||',%'</if>
+        <if test="dbName == 'mssql'">'%,'+#{id}+',%'</if>
+        <if test="dbName == 'mysql'">CONCAT('%,', #{id}, ',%')</if>
+    </update>
+
+    <select id="findModule" resultType="Category">
+        SELECT
+        <include refid="categoryColumns"/>
+        FROM cms_category a
+        <include refid="categoryJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test=" site.id != null and site.id != ''">
+                AND a.site_id = #{site.id}
+            </if>
+            <if test="parent.id != null and parent.id != ''">
+                AND a.parent_id = #{parent.id}
+            </if>
+            <if test="inMenu != null and inMenu != '' ">
+                AND a.in_menu = #{inMenu}
+            </if>
+        </where>
+        ORDER BY a.site_id,a.sort ASC
+    </select>
+
+    <update id="updateParentIds">
+		UPDATE cms_category SET
+		parent_id = #{parent.id},
+		parent_ids = #{parentIds}
+		WHERE id = #{id}
+	</update>
+
+    <select id="findByParentIdAndSiteId" resultType="Category">
+        SELECT
+        <include refid="categoryColumns"/>
+        FROM cms_category a
+        <include refid="categoryJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test=" site.id != null and site.id != ''">
+                AND a.site_id = #{site.id}
+            </if>
+            <if test="parent.id != null and parent.id != ''">
+                AND a.parent_id = #{parent.id}
+            </if>
+        </where>
+        order by a.site_id, a.sort
+    </select>
+
+    <select id="findByParentIdsLike" resultType="Category">
+        SELECT
+        a.id,
+        a.parent_id AS "parent.id",
+        a.parent_ids
+        FROM cms_category a
+        <include refid="categoryJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            AND a.parent_ids LIKE #{parentIds}
+        </where>
+        ORDER BY a.site_id, a.sort
+    </select>
+
+    <select id="findLikeList" resultType="Category">
+        SELECT
+        <include refid="categoryColumns"/>
+        FROM cms_category a
+        <include refid="categoryJoins"/>
+        <where>
+            a.del_flag = #{delFlag}
+            AND a.site_id =1
+            <if test="parentIds != null and parentIds != ''">
+                AND a.parent_id like
+                <if test="dbName == 'mysql'">CONCAT(#{parentIds}, '%')</if>
+            </if>
+            <if test="inMenu != null and inMenu != '' ">
+                AND a.in_menu = #{inMenu}
+            </if>
+        </where>
+        ORDER BY a.site_id,a.sort ASC
+    </select>
+
+    <select id="getAll" resultType="Category">
+        SELECT
+        <include refid="categoryColumns"/>
+        FROM cms_category a
+        <include refid="categoryJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="site.id != null and site.id != ''">
+                AND a.site_id = #{site.id}
+            </if>
+            <if test="inMenu != null and inMenu != '' ">
+                AND a.in_menu = #{inMenu}
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

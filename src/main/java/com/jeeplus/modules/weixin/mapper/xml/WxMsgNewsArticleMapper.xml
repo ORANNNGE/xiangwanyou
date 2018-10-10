@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.weixin.mapper.WxMsgNewsArticleMapper">
+    
+	<sql id="wxMsgNewsArticleColumns">
+		a.id AS "id",
+		a.mult_type AS "multType",
+		a.title AS "title",
+		a.author AS "author",
+		a.brief AS "brief",
+		a.content AS "content",
+		a.pic_path AS "picPath",
+		a.pic_dir AS "picDir",
+		a.show_pic AS "showPic",
+		a.url AS "url",
+		a.from_url AS "fromUrl",
+		a.base_id AS "baseId",
+		a.media_id AS "mediaId",
+		a.thumb_media_id AS "thumbMediaId",
+		a.news_index AS "newsIndex",
+		a.account AS "account",
+		a.create_date AS "createDate",
+		a.news_id AS "newsId"
+	</sql>
+	
+	<sql id="wxMsgNewsArticleJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="WxMsgNewsArticle" >
+		SELECT 
+			<include refid="wxMsgNewsArticleColumns"/>
+		FROM wx_msg_news_article a
+		<include refid="wxMsgNewsArticleJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="WxMsgNewsArticle" >
+		SELECT 
+			<include refid="wxMsgNewsArticleColumns"/>
+		FROM wx_msg_news_article a
+		<include refid="wxMsgNewsArticleJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="multType != null and multType != ''">
+				AND a.mult_type = #{multType}
+			</if>
+			<if test="title != null and title != ''">
+				AND a.title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+			<if test="brief != null and brief != ''">
+				AND a.brief = #{brief}
+			</if>
+			<if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
+				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+			</if>
+			<if test="newsId != null and newsId != ''">
+				AND a.news_id = #{newsId}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WxMsgNewsArticle" >
+		SELECT 
+			<include refid="wxMsgNewsArticleColumns"/>
+		FROM wx_msg_news_article a
+		<include refid="wxMsgNewsArticleJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wx_msg_news_article(
+			id,
+			mult_type,
+			title,
+			author,
+			brief,
+			content,
+			pic_path,
+			pic_dir,
+			show_pic,
+			url,
+			from_url,
+			base_id,
+			media_id,
+			thumb_media_id,
+			news_index,
+			account,
+			create_date,
+			news_id
+		) VALUES (
+			#{id},
+			#{multType},
+			#{title},
+			#{author},
+			#{brief},
+			#{content},
+			#{picPath},
+			#{picDir},
+			#{showPic},
+			#{url},
+			#{fromUrl},
+			#{baseId},
+			#{mediaId},
+			#{thumbMediaId},
+			#{newsIndex},
+			#{account},
+			#{createDate},
+			#{newsId}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wx_msg_news_article SET 	
+			mult_type = #{multType},
+			title = #{title},
+			author = #{author},
+			brief = #{brief},
+			content = #{content},
+			pic_path = #{picPath},
+			pic_dir = #{picDir},
+			show_pic = #{showPic},
+			url = #{url},
+			from_url = #{fromUrl},
+			base_id = #{baseId},
+			media_id = #{mediaId},
+			thumb_media_id = #{thumbMediaId},
+			news_index = #{newsIndex},
+			account = #{account},
+			news_id = #{newsId}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM wx_msg_news_article
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE wx_msg_news_article SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="WxMsgNewsArticle" statementType="STATEMENT">
+		select * FROM wx_msg_news_article  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

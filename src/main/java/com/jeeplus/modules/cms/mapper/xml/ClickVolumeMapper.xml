@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.cms.mapper.ClickVolumeMapper">
+    
+	<sql id="clickVolumeColumns">
+		a.id AS "id",
+		a.category_id AS "categoryId",
+		a.title AS "title",
+		a.article_id AS "articleId",
+		a.total AS "total",
+		a.year AS "year",
+		a.month AS "month",
+		a.week AS "week",
+		a.day AS "day",
+		a.create_date AS "createDate"
+	</sql>
+	
+	<sql id="clickVolumeJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="ClickVolume" >
+		SELECT 
+			<include refid="clickVolumeColumns"/>
+		FROM cms_click_volume a
+		<include refid="clickVolumeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="ClickVolume" >
+		SELECT 
+			<include refid="clickVolumeColumns"/>
+		FROM cms_click_volume a
+		<include refid="clickVolumeJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="title != null and title != ''">
+				AND a.title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="ClickVolume" >
+		SELECT 
+			<include refid="clickVolumeColumns"/>
+		FROM cms_click_volume a
+		<include refid="clickVolumeJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cms_click_volume(
+			id,
+			category_id,
+			title,
+			article_id,
+			total,
+			year,
+			month,
+			week,
+			day,
+			create_date
+		) VALUES (
+			#{id},
+			#{categoryId},
+			#{title},
+			#{articleId},
+			#{total},
+			#{year},
+			#{month},
+			#{week},
+			#{day},
+			#{createDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cms_click_volume SET 	
+			category_id = #{categoryId},
+			title = #{title},
+			article_id = #{articleId},
+			total = #{total},
+			year = #{year},
+			month = #{month},
+			week = #{week},
+			day = #{day}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM cms_click_volume
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE cms_click_volume SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="ClickVolume" statementType="STATEMENT">
+		select * FROM cms_click_volume  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

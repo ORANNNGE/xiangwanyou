@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.weixin.mapper.WxMsgNewsMapper">
+    
+	<sql id="wxMsgNewsColumns">
+		a.id AS "id",
+		a.mult_type AS "multType",
+		a.title AS "title",
+		a.author AS "author",
+		a.brief AS "brief",
+		a.content AS "content",
+		a.pic_path AS "picPath",
+		a.pic_dir AS "picDir",
+		a.show_pic AS "showPic",
+		a.url AS "url",
+		a.from_url AS "fromUrl",
+		a.base_id AS "baseId",
+		a.media_id AS "mediaId",
+		a.thumb_media_id AS "thumbMediaId",
+		a.news_index AS "newsIndex",
+		a.account AS "account",
+		a.create_date AS "createDate"
+	</sql>
+	
+	<sql id="wxMsgNewsJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="WxMsgNews" >
+		SELECT 
+			<include refid="wxMsgNewsColumns"/>
+		FROM wx_msg_news a
+		<include refid="wxMsgNewsJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="getByBaseId" resultType="WxMsgNews" >
+		SELECT
+		<include refid="wxMsgNewsColumns"/>
+		FROM wx_msg_news a
+		<include refid="wxMsgNewsJoins"/>
+		WHERE a.base_id = #{baseId}
+	</select>
+
+	<select id="getRandomMsgByContent" resultType="WxMsgNews" >
+		SELECT t.* from wx_msg_news t , wx_msg_base b
+		WHERE b.input_code like CONCAT('%','${param1}','%' ) and t.base_id = b.id
+		ORDER BY RAND() LIMIT #{param2}
+	</select>
+
+	<select id="listMsgNewsByBaseId" resultType="WxMsgNews">
+		SELECT t.* FROM wx_msg_news t , wx_msg_base b
+		WHERE t.base_id = b.id
+		AND b.id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</select>
+
+	<select id="findList" resultType="WxMsgNews" >
+		SELECT 
+			<include refid="wxMsgNewsColumns"/>
+		FROM wx_msg_news a
+		<include refid="wxMsgNewsJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="multType != null and multType != ''">
+				AND a.mult_type = #{multType}
+			</if>
+			<if test="title != null and title != ''">
+				AND a.title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+			<if test="beginCreateDate != null and endCreateDate != null and beginCreateDate != '' and endCreateDate != ''">
+				AND a.create_date BETWEEN #{beginCreateDate} AND #{endCreateDate}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="WxMsgNews" >
+		SELECT 
+			<include refid="wxMsgNewsColumns"/>
+		FROM wx_msg_news a
+		<include refid="wxMsgNewsJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO wx_msg_news(
+			id,
+			mult_type,
+			title,
+			author,
+			brief,
+			content,
+			pic_path,
+			pic_dir,
+			show_pic,
+			url,
+			from_url,
+			base_id,
+			media_id,
+			thumb_media_id,
+			news_index,
+			account,
+			create_date
+		) VALUES (
+			#{id},
+			#{multType},
+			#{title},
+			#{author},
+			#{brief},
+			#{content},
+			#{picPath},
+			#{picDir},
+			#{showPic},
+			#{url},
+			#{fromUrl},
+			#{baseId},
+			#{mediaId},
+			#{thumbMediaId},
+			#{newsIndex},
+			#{account},
+			#{createDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE wx_msg_news SET 	
+			mult_type = #{multType},
+			title = #{title},
+			author = #{author},
+			brief = #{brief},
+			content = #{content},
+			pic_path = #{picPath},
+			pic_dir = #{picDir},
+			show_pic = #{showPic},
+			url = #{url},
+			from_url = #{fromUrl},
+			base_id = #{baseId},
+			media_id = #{mediaId},
+			thumb_media_id = #{thumbMediaId},
+			news_index = #{newsIndex},
+			account = #{account}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM wx_msg_news
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE wx_msg_news SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="WxMsgNews" statementType="STATEMENT">
+		select * FROM wx_msg_news  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

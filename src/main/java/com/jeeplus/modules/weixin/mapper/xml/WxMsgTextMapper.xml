@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.weixin.mapper.WxMsgTextMapper">
+
+    <sql id="wxMsgTextColumns">
+		a.id AS "id",
+		a.title AS "title",
+		a.content AS "content",
+		a.base_id AS "baseId",
+		a.account AS "account",
+		a.create_date AS "createDate",
+		b.input_code AS "wxMsgBase.inputCode",
+		b.id AS "wxMsgBase.id"
+	</sql>
+
+    <sql id="wxMsgTextJoins">
+		LEFT join wx_msg_base b on b.id=a.base_id
+	</sql>
+
+
+    <select id="get" resultType="WxMsgText">
+        SELECT
+        <include refid="wxMsgTextColumns"/>
+        FROM wx_msg_text a
+        <include refid="wxMsgTextJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="getMsgTextByBaseId" resultType="WxMsgText">
+        SELECT
+        <include refid="wxMsgTextColumns"/>
+        FROM wx_msg_text a
+        <include refid="wxMsgTextJoins"/>
+        WHERE a.base_id = #{baseId}
+    </select>
+
+    <select id="getMsgTextBySubscribe" resultType="WxMsgText">
+		SELECT t.* FROM wx_msg_text t , wx_msg_base b
+		WHERE t.base_id = b.id
+		AND b.input_code = 'subscribe'
+	</select>
+
+    <select id="getMsgTextByInputCode" resultType="WxMsgText">
+		SELECT t.* FROM wx_msg_text t , wx_msg_base b
+		WHERE t.base_id = b.id
+		AND b.input_code = #{inputcode}
+	</select>
+
+    <select id="findList" resultType="WxMsgText">
+        SELECT
+        <include refid="wxMsgTextColumns"/>
+        FROM wx_msg_text a
+        <include refid="wxMsgTextJoins"/>
+        <where>
+
+            ${dataScope}
+            <if test="title != null and title != ''">
+                AND a.title LIKE
+                <if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+                <if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+                <if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+            </if>
+            <if test="baseId != null and baseId != ''">
+                AND a.base_id = #{baseId}
+            </if>
+            <if test="account != null and account != ''">
+                AND a.account = #{account}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="WxMsgText">
+        SELECT
+        <include refid="wxMsgTextColumns"/>
+        FROM wx_msg_text a
+        <include refid="wxMsgTextJoins"/>
+        <where>
+
+            ${dataScope}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+    </select>
+
+    <insert id="insert">
+		INSERT INTO wx_msg_text(
+			title,
+			content,
+			base_id,
+			account,
+			create_date
+		) VALUES (
+			#{title},
+			#{content},
+			#{baseId},
+			#{account},
+			#{createDate}
+		)
+	</insert>
+
+    <update id="update">
+		UPDATE wx_msg_text SET 	
+			title = #{title},
+			content = #{content},
+			base_id = #{baseId},
+			account = #{account}
+		WHERE id = #{id}
+	</update>
+
+
+    <!--物理删除-->
+    <update id="delete">
+		DELETE FROM wx_msg_text
+		WHERE id = #{id}
+	</update>
+
+    <!--逻辑删除-->
+    <update id="deleteByLogic">
+		UPDATE wx_msg_text SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+
+    <!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+    <select id="findUniqueByProperty" resultType="WxMsgText" statementType="STATEMENT">
+		select * FROM wx_msg_text  where ${propertyName} = '${value}'
+	</select>
+
+</mapper>

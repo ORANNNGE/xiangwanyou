@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.game.mapper.admin.UsersTasksItemMapper">
+    
+	<sql id="usersTasksItemColumns">
+		a.id AS "id",
+		a.users_id AS "users.id",
+		a.tasks_id AS "tasks.id",
+		a.remarks AS "remarks",
+		a.picture AS "picture",
+		a.state AS "state",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.del_flag AS "delFlag",
+				
+		users.phone_num AS "users.phoneNum",
+				
+		tasks.name AS "tasks.name",
+		tasks.phase AS "tasks.phase",
+		tasks.reward AS "tasks.reward"
+	</sql>
+	
+	<sql id="usersTasksItemJoins">
+		
+		LEFT JOIN game_users users ON users.id = a.users_id
+		LEFT JOIN game_tasks tasks ON tasks.id = a.tasks_id
+	</sql>
+	
+	<select id="get" resultType="UsersTasksItem" >
+		SELECT 
+			<include refid="usersTasksItemColumns"/>
+		FROM game_users_tasks_item a
+		<include refid="usersTasksItemJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="UsersTasksItem" >
+		SELECT 
+			<include refid="usersTasksItemColumns"/>
+		FROM game_users_tasks_item a
+		<include refid="usersTasksItemJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="UsersTasksItem" >
+		SELECT 
+			<include refid="usersTasksItemColumns"/>
+		FROM game_users_tasks_item a
+		<include refid="usersTasksItemJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO game_users_tasks_item(
+			id,
+			users_id,
+			tasks_id,
+			remarks,
+			picture,
+			state,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			del_flag
+		) VALUES (
+			#{id},
+			#{users.id},
+			#{tasks.id},
+			#{remarks},
+			#{picture},
+			#{state},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE game_users_tasks_item SET 	
+			users_id = #{users.id},
+			tasks_id = #{tasks.id},
+			remarks = #{remarks},
+			picture = #{picture},
+			state = #{state},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM game_users_tasks_item
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE game_users_tasks_item SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="UsersTasksItem" statementType="STATEMENT">
+		select * FROM game_users_tasks_item  where ${propertyName} = '${value}'
+	</select>
+	
+	<update id="updateUsersTasksItem">
+		update game_users_tasks_item SET
+		picture = #{imgUrl}, 
+		remarks = #{commitContent},
+		state = #{state}
+		where id=#{usersTasksId}
+	</update>
+	
+	<select id="selectByUsersIdAndTasksId" resultType="UsersTasksItem">
+		select
+		<include refid="usersTasksItemColumns"/>
+		from game_users_tasks_item a
+		<include refid="usersTasksItemJoins"/>
+		where
+		users_id=#{usersId}
+		and
+		tasks_id=#{tasksId}
+	</select>
+	<select id="selectByUsersId" resultType="UsersTasksItem">
+		select
+		<include refid="usersTasksItemColumns"/>
+		from game_users_tasks_item a
+		<include refid="usersTasksItemJoins"/>
+		where
+		users_id=#{usersId}
+	</select>
+	<select id="selectPassed" resultType="UsersTasksItem">
+		select
+		<include refid="usersTasksItemColumns"/>
+		from game_users_tasks_item a
+		<include refid="usersTasksItemJoins"/>
+		where
+		users_id=#{usersId}
+		and
+		state = '3'
+	</select>
+	<select id="selectPassedAndNot" resultType="UsersTasksItem">
+		select
+		<include refid="usersTasksItemColumns"/>
+		from game_users_tasks_item a
+		<include refid="usersTasksItemJoins"/>
+		where
+		users_id=#{usersId}
+		and
+		(state = '3' 
+		or
+		state = '4')
+	</select>
+</mapper>

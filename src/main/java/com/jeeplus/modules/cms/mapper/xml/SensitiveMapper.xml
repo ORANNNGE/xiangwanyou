@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.cms.mapper.SensitiveMapper">
+    
+	<sql id="sensitiveColumns">
+		a.id AS "id",
+		a.title AS "title",
+		a.status AS "status"
+	</sql>
+	
+	<sql id="sensitiveJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="Sensitive" >
+		SELECT 
+			<include refid="sensitiveColumns"/>
+		FROM cms_sensitive a
+		<include refid="sensitiveJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Sensitive" >
+		SELECT 
+			<include refid="sensitiveColumns"/>
+		FROM cms_sensitive a
+		<include refid="sensitiveJoins"/>
+		<where>
+			
+			${dataScope}
+			<if test="title != null and title != ''">
+				AND a.title LIKE 
+					<if test="dbName == 'oracle'">'%'||#{title}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{title}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{title},'%')</if>
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Sensitive" >
+		SELECT 
+			<include refid="sensitiveColumns"/>
+		FROM cms_sensitive a
+		<include refid="sensitiveJoins"/>
+		<where>
+			
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO cms_sensitive(
+			id,
+			title,
+			status
+		) VALUES (
+			#{id},
+			#{title},
+			#{status}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE cms_sensitive SET 	
+			title = #{title},
+			status = #{status}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM cms_sensitive
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE cms_sensitive SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="Sensitive" statementType="STATEMENT">
+		select * FROM cms_sensitive  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

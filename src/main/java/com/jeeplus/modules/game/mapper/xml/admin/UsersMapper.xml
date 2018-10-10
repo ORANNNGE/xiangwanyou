@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.game.mapper.admin.UsersMapper">
+    
+	<sql id="usersColumns">
+		a.id AS "id",
+		a.phone_num AS "phoneNum",
+		a.password AS "password",
+		a.balance AS "balance",
+		a.realname AS "realName",
+		a.sex AS "sex",
+		a.idcard AS "idcard",
+		a.alipay_name AS "alipayName",
+		a.alipay_account AS "alipayAccount",
+		a.area AS "area",
+		a.phone_os AS "phoneOS",
+		a.status AS "status",
+		a.expiredate AS "expireDate",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="usersJoins">
+		
+	</sql>
+	
+    
+	<select id="get" resultType="Users" >
+		SELECT 
+			<include refid="usersColumns"/>
+		FROM game_users a
+		<include refid="usersJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Users" >
+		SELECT 
+			<include refid="usersColumns"/>
+		FROM game_users a
+		<include refid="usersJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="phoneNum != null and phoneNum != ''">
+				AND a.phone_num = #{phoneNum}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Users" >
+		SELECT 
+			<include refid="usersColumns"/>
+		FROM game_users a
+		<include refid="usersJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO game_users(
+			id,
+			phone_num,
+			password,
+			balance,
+			realname,
+			sex,
+			idcard,
+			alipay_name,
+			alipay_account,
+			area,
+			phone_os,
+			status,
+			expiredate,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{phoneNum},
+			#{password},
+			#{balance},
+			#{realName},
+			#{sex},
+			#{idcard},
+			#{alipayName},
+			#{alipayAccount},
+			#{area},
+			#{phoneOS},
+			#{status},
+			#{expireDate},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE game_users SET 	
+			phone_num = #{phoneNum},
+			password = #{password},
+			balance = #{balance},
+			realname = #{realName},
+			sex = #{sex},
+			idcard = #{idcard},
+			alipay_name = #{alipayName},
+			alipay_account = #{alipayAccount},
+			area = #{area},
+			phone_os = #{phoneOS},
+			status = #{status},
+			expiredate = #{expireDate},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM game_users
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE game_users SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="Users" statementType="STATEMENT">
+		select * FROM game_users  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>
