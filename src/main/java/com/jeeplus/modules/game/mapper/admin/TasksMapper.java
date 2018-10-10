@@ -3,18 +3,18 @@
  */
 package com.jeeplus.modules.game.mapper.admin;
 
-import java.util.List;
-
 import com.jeeplus.core.persistence.BaseMapper;
 import com.jeeplus.core.persistence.annotation.MyBatisMapper;
 import com.jeeplus.modules.game.entity.admin.Tasks;
 
+import java.util.List;
+
 /**
  * 任务管理MAPPER接口
  * @author orange
- * @version 2018-08-06
+ * @version 2018-10-10
  */
 @MyBatisMapper
 public interface TasksMapper extends BaseMapper<Tasks> {
-		List<Tasks> listTasks();
+    List<Tasks> listTasks();
 }

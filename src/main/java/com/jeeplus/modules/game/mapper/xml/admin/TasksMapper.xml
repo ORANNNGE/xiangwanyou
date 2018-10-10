@@ -13,6 +13,7 @@
 		a.num_total AS "numTotal",
 		a.num_remain AS "numRemain",
 		a.reward AS "reward",
+		a.expire_hours AS "expireHours",
 		a.create_by AS "createBy.id",
 		a.create_date AS "createDate",
 		a.update_by AS "updateBy.id",
@@ -81,16 +82,7 @@
 		</choose>
 	</select>
 	
-	<select id="listTasks" resultType="Tasks">
-		SELECT 
-			<include refid="tasksColumns"/>
-		FROM game_tasks a
-		order by
-		cast(createDate as datetime) 
-		desc
-	</select>
-	
-	<insert id="insert" >
+	<insert id="insert">
 		INSERT INTO game_tasks(
 			id,
 			name,
@@ -102,6 +94,7 @@
 			num_total,
 			num_remain,
 			reward,
+			expire_hours,
 			create_by,
 			create_date,
 			update_by,
@@ -119,6 +112,7 @@
 			#{numTotal},
 			#{numRemain},
 			#{reward},
+			#{expireHours},
 			#{createBy.id},
 			#{createDate},
 			#{updateBy.id},
@@ -139,6 +133,7 @@
 			num_total = #{numTotal},
 			num_remain = #{numRemain},
 			reward = #{reward},
+			expire_hours = #{expireHours},
 			update_by = #{updateBy.id},
 			update_date = #{updateDate},
 			remarks = #{remarks}
@@ -164,5 +159,14 @@
 	<select id="findUniqueByProperty" resultType="Tasks" statementType="STATEMENT">
 		select * FROM game_tasks  where ${propertyName} = '${value}'
 	</select>
-	
+
+	<select id="listTasks" resultType="Tasks">
+		SELECT
+		<include refid="tasksColumns"/>
+		FROM game_tasks a
+		order by
+		cast(createDate as datetime)
+		desc
+	</select>
+
 </mapper>

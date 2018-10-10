@@ -3,6 +3,9 @@
  */
 package com.jeeplus.modules.game.entity.admin;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Max;
 
 import com.jeeplus.core.persistence.DataEntity;
 import com.jeeplus.common.utils.excel.annotation.ExcelField;
@@ -10,7 +13,7 @@ import com.jeeplus.common.utils.excel.annotation.ExcelField;
 /**
  * 任务管理Entity
  * @author orange
- * @version 2018-08-06
+ * @version 2018-10-10
  */
 public class Tasks extends DataEntity<Tasks> {
 	
@@ -24,23 +27,8 @@ public class Tasks extends DataEntity<Tasks> {
 	private Integer numTotal;		// 可领任务总数量
 	private Integer numRemain;		// 剩余任务数量
 	private Integer reward;		// 奖励金
+	private Integer expireHours;		// 限时(小时)
 	
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-		return 
-				"id:"+id+
-				" name:"+name+
-				" code:"+code+
-				" phase:"+phase+
-				" details:"+details+
-				" icon:"+icon+
-				" download:"+download+
-				" numTotal:"+numTotal+
-				" numRemain:"+numRemain+
-				" reward:"+reward;
-				
-	}
 	public Tasks() {
 		super();
 	}
@@ -103,6 +91,7 @@ public class Tasks extends DataEntity<Tasks> {
 		this.download = download;
 	}
 	
+	@NotNull(message="可领任务总数量不能为空")
 	@ExcelField(title="可领任务总数量", align=2, sort=7)
 	public Integer getNumTotal() {
 		return numTotal;
@@ -112,6 +101,7 @@ public class Tasks extends DataEntity<Tasks> {
 		this.numTotal = numTotal;
 	}
 	
+	@NotNull(message="剩余任务数量不能为空")
 	@ExcelField(title="剩余任务数量", align=2, sort=8)
 	public Integer getNumRemain() {
 		return numRemain;
@@ -121,6 +111,7 @@ public class Tasks extends DataEntity<Tasks> {
 		this.numRemain = numRemain;
 	}
 	
+	@NotNull(message="奖励金不能为空")
 	@ExcelField(title="奖励金", align=2, sort=9)
 	public Integer getReward() {
 		return reward;
@@ -128,6 +119,17 @@ public class Tasks extends DataEntity<Tasks> {
 
 	public void setReward(Integer reward) {
 		this.reward = reward;
+	}
+	
+	@Min(value=1,message="限时(小时)的最小值不能小于1")
+	@Max(value=240,message="限时(小时)的最大值不能超过240")
+	@ExcelField(title="限时(小时)", align=2, sort=10)
+	public Integer getExpireHours() {
+		return expireHours;
+	}
+
+	public void setExpireHours(Integer expireHours) {
+		this.expireHours = expireHours;
 	}
 	
 }

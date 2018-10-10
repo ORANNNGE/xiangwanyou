@@ -72,7 +72,7 @@ $(document).ready(function() {
               
                onClickRow: function(row, $el){
                },
-			columns: [{
+               columns: [{
 		        checkbox: true
 		       
 		    }
@@ -146,6 +146,12 @@ $(document).ready(function() {
 			,{
 		        field: 'reward',
 		        title: '奖励金',
+		        sortable: true
+		       
+		    }
+			,{
+		        field: 'expireHours',
+		        title: '限时(小时)',
 		        sortable: true
 		       
 		    }

@@ -17,11 +17,12 @@ import com.jeeplus.modules.game.mapper.admin.TasksMapper;
 /**
  * 任务管理Service
  * @author orange
- * @version 2018-08-06
+ * @version 2018-10-10
  */
 @Service
 @Transactional(readOnly = true)
 public class TasksService extends CrudService<TasksMapper, Tasks> {
+
 	@Autowired
 	TasksMapper mapper;
 	public List<Tasks> listTasks(){
