@@ -72,7 +72,7 @@ $(document).ready(function() {
               
                onClickRow: function(row, $el){
                },
-               columns: [{
+			columns: [{
 		        checkbox: true
 		       
 		    }

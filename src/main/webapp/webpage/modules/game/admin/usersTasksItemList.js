@@ -90,10 +90,15 @@ $(document).ready(function() {
 		       
 		    }
 			,{
+		        field: 'users.realName',
+		        title: '姓名',
+		        sortable: true
+		    }
+			,{
 		        field: 'tasks.name',
 		        title: '任务',
 		        sortable: true
-		       
+
 		    }
 			,{
 		        field: 'remarks',
@@ -149,7 +154,7 @@ $(document).ready(function() {
 	  $('#usersTasksItemTable').on('check.bs.table uncheck.bs.table load-success.bs.table ' +
                 'check-all.bs.table uncheck-all.bs.table', function () {
             $('#remove').prop('disabled', ! $('#usersTasksItemTable').bootstrapTable('getSelections').length);
-            $('#updateState').prop('disabled', ! $('#usersTasksItemTable').bootstrapTable('getSelections').length);
+          	$('#updateState').prop('disabled', ! $('#usersTasksItemTable').bootstrapTable('getSelections').length);
             $('#edit').prop('disabled', $('#usersTasksItemTable').bootstrapTable('getSelections').length!=1);
         });
 		  
@@ -199,40 +204,41 @@ $(document).ready(function() {
             return row.id
         });
     }
-  
-  function deleteAll(){
+
+	function deleteAll(){
+
 		jp.confirm('确认要删除该用户任务记录吗？', function(){
-			jp.loading();  	
+			jp.loading();
 			jp.get("${ctx}/game/admin/usersTasksItem/deleteAll?ids=" + getIdSelections(), function(data){
-         	  		if(data.success){
-         	  			$('#usersTasksItemTable').bootstrapTable('refresh');
-         	  			jp.success(data.msg);
-         	  		}else{
-         	  			jp.error(data.msg);
-         	  		}
-         	  	})
+					if(data.success){
+						$('#usersTasksItemTable').bootstrapTable('refresh');
+						jp.success(data.msg);
+					}else{
+						jp.error(data.msg);
+					}
+				})
+
 		})
-  }
-  //所选项的任务的状态改为已通过
-  function updateStateAll(){
+	}
+	//所选项的任务的状态改为已通过
+	function updateStateAll(){
 		jp.confirm('确认要通过该用户任务吗？', function(){
 			jp.loading();
 			jp.get("${ctx}/game/admin/usersTasksItem/updateStateAll?ids=" + getIdSelections(), function(data){
-         	  		if(data.success){
-         	  			$('#usersTasksItemTable').bootstrapTable('refresh');
-         	  			jp.success(data.msg);
-         	  		}else{
-         	  			jp.error(data.msg);
-         	  		}
-         	  	})
+				if(data.success){
+					$('#usersTasksItemTable').bootstrapTable('refresh');
+					jp.success(data.msg);
+				}else{
+					jp.error(data.msg);
+				}
+			})
 
 		})
-  }
+	}
 
-
-  function add(){
+	function add(){
 	  jp.openDialog('新增用户任务', "${ctx}/game/admin/usersTasksItem/form",'800px', '500px', $('#usersTasksItemTable'));
-  }
+  	}
 
   function edit(id){//没有权限时，不显示确定按钮
   	  if(id == undefined){

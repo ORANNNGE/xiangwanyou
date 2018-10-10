@@ -5,7 +5,6 @@ package com.jeeplus.modules.game.service.admin;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,18 +17,19 @@ import com.jeeplus.modules.game.mapper.admin.UsersTasksItemMapper;
 /**
  * 用户任务项管理Service
  * @author orange
- * @version 2018-08-06
+ * @version 2018-10-10
  */
 @Service
 @Transactional(readOnly = true)
 public class UsersTasksItemService extends CrudService<UsersTasksItemMapper, UsersTasksItem> {
+
 	@Autowired
 	UsersTasksItemMapper mapper;
-	
+
 	@Transactional(readOnly = false)
 	public void updateUsersTasksItem(String imgUrl,String commitContent,String usersTasksId,String state) {
 		mapper.updateUsersTasksItem(imgUrl,commitContent,usersTasksId, state);
-	}							
+	}
 	public List<UsersTasksItem> selectByUsersIdAndTasksId(String usersId,String tasksId){
 		return mapper.selectByUsersIdAndTasksId(usersId, tasksId);
 	}

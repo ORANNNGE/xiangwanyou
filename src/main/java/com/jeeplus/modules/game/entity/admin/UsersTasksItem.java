@@ -12,7 +12,7 @@ import com.jeeplus.common.utils.excel.annotation.ExcelField;
 /**
  * 用户任务项管理Entity
  * @author orange
- * @version 2018-08-13
+ * @version 2018-10-10
  */
 public class UsersTasksItem extends DataEntity<UsersTasksItem> {
 	

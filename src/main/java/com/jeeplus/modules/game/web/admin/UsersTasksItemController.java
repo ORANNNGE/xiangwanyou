@@ -40,7 +40,7 @@ import com.jeeplus.modules.game.service.admin.UsersTasksItemService;
 /**
  * 用户任务项管理Controller
  * @author orange
- * @version 2018-08-13
+ * @version 2018-10-10
  */
 @Controller
 @RequestMapping(value = "${adminPath}/game/admin/usersTasksItem")
@@ -143,7 +143,7 @@ public class UsersTasksItemController extends BaseController {
 	 * 批量审核用户任务
 	 */
 	@ResponseBody
-	@RequiresPermissions("game:admin:usersTasksItem:edit")
+	@RequiresPermissions("game:admin:usersTasksItem:del")
 	@RequestMapping(value = "updateStateAll")
 	public AjaxJson updateStateAll(String ids, RedirectAttributes redirectAttributes) {
 		AjaxJson j = new AjaxJson();

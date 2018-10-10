@@ -16,10 +16,10 @@
 		a.del_flag AS "delFlag",
 				
 		users.phone_num AS "users.phoneNum",
+		users.realname AS "users.realName",
 				
 		tasks.name AS "tasks.name",
-		tasks.phase AS "tasks.phase",
-		tasks.reward AS "tasks.reward"
+		tasks.phase AS "tasks.phase"
 	</sql>
 	
 	<sql id="usersTasksItemJoins">
@@ -28,6 +28,7 @@
 		LEFT JOIN game_tasks tasks ON tasks.id = a.tasks_id
 	</sql>
 	
+    
 	<select id="get" resultType="UsersTasksItem" >
 		SELECT 
 			<include refid="usersTasksItemColumns"/>
@@ -44,6 +45,18 @@
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
 			${dataScope}
+			<if test="users != null and users.id != null and users.id != ''">
+				AND a.users_id LIKE 
+					<if test="dbName == 'oracle'">'%'||#{users.id}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{users.id}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{users.id},'%')</if>
+			</if>
+			<if test="tasks != null and tasks.id != null and tasks.id != ''">
+				AND a.tasks_id LIKE 
+					<if test="dbName == 'oracle'">'%'||#{tasks.id}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{tasks.id}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{tasks.id},'%')</if>
+			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
@@ -133,15 +146,15 @@
 	<select id="findUniqueByProperty" resultType="UsersTasksItem" statementType="STATEMENT">
 		select * FROM game_users_tasks_item  where ${propertyName} = '${value}'
 	</select>
-	
+
 	<update id="updateUsersTasksItem">
 		update game_users_tasks_item SET
-		picture = #{imgUrl}, 
+		picture = #{imgUrl},
 		remarks = #{commitContent},
 		state = #{state}
 		where id=#{usersTasksId}
 	</update>
-	
+
 	<select id="selectByUsersIdAndTasksId" resultType="UsersTasksItem">
 		select
 		<include refid="usersTasksItemColumns"/>
@@ -178,7 +191,7 @@
 		where
 		users_id=#{usersId}
 		and
-		(state = '3' 
+		(state = '3'
 		or
 		state = '4')
 	</select>

@@ -58,12 +58,12 @@
 					<td class="width-15 active"><label class="pull-right">用户：</label></td>
 					<td class="width-35">
 						<sys:gridselect url="${ctx}/game/admin/users/data" id="users" name="users.id" value="${usersTasksItem.users.id}" labelName="users.phoneNum" labelValue="${usersTasksItem.users.phoneNum}"
-							 title="选择用户" cssClass="form-control required" fieldLabels="手机号" fieldKeys="phoneNum" searchLabels="手机号" searchKeys="phoneNum" ></sys:gridselect>
+							 title="选择用户" cssClass="form-control required" fieldLabels="手机号|姓名" fieldKeys="phoneNum|realName" searchLabels="手机号|姓名" searchKeys="phoneNumphoneNum|realName" ></sys:gridselect>
 					</td>
 					<td class="width-15 active"><label class="pull-right">任务：</label></td>
 					<td class="width-35">
 						<sys:gridselect url="${ctx}/game/admin/tasks/data" id="tasks" name="tasks.id" value="${usersTasksItem.tasks.id}" labelName="tasks.name" labelValue="${usersTasksItem.tasks.name}"
-							 title="选择任务" cssClass="form-control required" fieldLabels="任务名|第几期|奖励" fieldKeys="name|phase|reward" searchLabels="任务名|第几期|奖励" searchKeys="name|phase|reward" ></sys:gridselect>
+							 title="选择任务" cssClass="form-control required" fieldLabels="任务名|第几期" fieldKeys="name|phase" searchLabels="任务名|第几期" searchKeys="name|phase" ></sys:gridselect>
 					</td>
 				</tr>
 				<tr>
