@@ -60,8 +60,8 @@
 	        	</button>
 			</shiro:hasPermission>
 			<shiro:hasPermission name="game:admin:usersTasksItem:del">
-				<button id="updateState" class="btn btn-danger" disabled onclick="updateStateAll()">
-					<i class="glyphicon glyphicon-remove"></i> 批量通过审核
+				<button id="updateState" class="btn btn-success" disabled onclick="updateStateAll()">
+					<i class="glyphicon glyphicon-edit"></i> 批量通过审核
 				</button>
 			</shiro:hasPermission>
 			<shiro:hasPermission name="game:admin:usersTasksItem:import">

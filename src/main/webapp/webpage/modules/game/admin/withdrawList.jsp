@@ -49,14 +49,19 @@
 	            	<i class="glyphicon glyphicon-remove"></i> 删除
 	        	</button>
 			</shiro:hasPermission>
+			<shiro:hasPermission name="game:admin:withdraw:del">
+				<button id="updateAll" class="btn btn-success" disabled onclick="updateAll()">
+	            	<i class="glyphicon glyphicon-edit"></i> 批量提现成功
+	        	</button>
+			</shiro:hasPermission>
 			<shiro:hasPermission name="game:admin:withdraw:import">
 				<button id="btnImport" class="btn btn-info"><i class="fa fa-folder-open-o"></i> 导入</button>
 				<div id="importBox" class="hide">
 						<form id="importForm" action="${ctx}/game/admin/withdraw/import" method="post" enctype="multipart/form-data"
 							 style="padding-left:20px;text-align:center;" ><br/>
 							<input id="uploadFile" name="file" type="file" style="width:330px"/>导入文件不能超过5M，仅允许导入“xls”或“xlsx”格式文件！<br/>　　
-							
-							
+
+
 						</form>
 				</div>
 			</shiro:hasPermission>

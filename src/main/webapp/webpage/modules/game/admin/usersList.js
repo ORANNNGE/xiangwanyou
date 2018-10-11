@@ -180,6 +180,7 @@ $(document).ready(function() {
 	  $('#usersTable').on('check.bs.table uncheck.bs.table load-success.bs.table ' +
                 'check-all.bs.table uncheck-all.bs.table', function () {
             $('#remove').prop('disabled', ! $('#usersTable').bootstrapTable('getSelections').length);
+            $('#updateState').prop('disabled', ! $('#usersTable').bootstrapTable('getSelections').length);
             $('#edit').prop('disabled', $('#usersTable').bootstrapTable('getSelections').length!=1);
         });
 		  
@@ -230,11 +231,25 @@ $(document).ready(function() {
         });
     }
   
-  function deleteAll(){
+  function deleteAll() {
 
-		jp.confirm('确认要删除该用户记录吗？', function(){
-			jp.loading();  	
-			jp.get("${ctx}/game/admin/users/deleteAll?ids=" + getIdSelections(), function(data){
+      jp.confirm('确认要删除该用户记录吗？', function () {
+          jp.loading();
+          jp.get("${ctx}/game/admin/users/deleteAll?ids=" + getIdSelections(), function (data) {
+              if (data.success) {
+                  $('#usersTable').bootstrapTable('refresh');
+                  jp.success(data.msg);
+              } else {
+                  jp.error(data.msg);
+              }
+          })
+
+      })
+  }
+  function updateAll(){
+		jp.confirm('确认要升级该用户吗？', function(){
+			jp.loading();
+			jp.get("${ctx}/game/admin/users/updataAll?ids=" + getIdSelections(), function(data){
          	  		if(data.success){
          	  			$('#usersTable').bootstrapTable('refresh');
          	  			jp.success(data.msg);
@@ -242,7 +257,6 @@ $(document).ready(function() {
          	  			jp.error(data.msg);
          	  		}
          	  	})
-          	   
 		})
   }
    function add(){

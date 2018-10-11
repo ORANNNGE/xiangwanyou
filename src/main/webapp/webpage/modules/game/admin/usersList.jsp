@@ -53,6 +53,11 @@
 	            	<i class="glyphicon glyphicon-remove"></i> 删除
 	        	</button>
 			</shiro:hasPermission>
+			<shiro:hasPermission name="game:admin:users:del">
+				<button id="updateState" class="btn btn-success" disabled onclick="updateAll()">
+	            	<i class="glyphicon glyphicon-edit"></i> 批量升级会员
+	        	</button>
+			</shiro:hasPermission>
 			<shiro:hasPermission name="game:admin:users:import">
 				<button id="btnImport" class="btn btn-info"><i class="fa fa-folder-open-o"></i> 导入</button>
 				<div id="importBox" class="hide">
