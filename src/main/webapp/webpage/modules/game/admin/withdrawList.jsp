@@ -23,6 +23,19 @@
 	<div id="collapseTwo" class="accordion-body collapse">
 		<div class="accordion-inner">
 			<form:form id="searchForm" modelAttribute="withdraw" class="form form-horizontal well clearfix">
+			<div class="col-xs-12 col-sm-6 col-md-4">
+                <div class="col-xs-12 col-sm-6 col-md-4">
+                    <label class="label-item single-overflow pull-left" title="用户：">用户：</label>
+                    <sys:gridselect url="${ctx}/game/admin/users/data" id="users" name="users.id" value="${usersTasksItem.users.id}" labelName="users.phoneNum" labelValue="${withdraw.users.phoneNum}"
+                                    title="选择用户" cssClass="form-control required" fieldLabels="手机号|姓名" fieldKeys="phoneNum|realName" searchLabels="手机号|姓名" searchKeys="phoneNum|realName" ></sys:gridselect>
+                </div>
+				<div class="form-group">
+					<label class="label-item single-overflow pull-left" title="提现状态：">&nbsp;提现状态：</label>
+					<div class="col-xs-12">
+						<form:radiobuttons class="i-checks" path="state" items="${fns:getDictList('withdraw_state')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+					</div>
+				</div>
+			</div>
 		 <div class="col-xs-12 col-sm-6 col-md-4">
 			<div style="margin-top:26px">
 			  <a  id="search" class="btn btn-primary btn-rounded  btn-bordered btn-sm"><i class="fa fa-search"></i> 查询</a>

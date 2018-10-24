@@ -27,6 +27,10 @@ public class WithdrawService extends CrudService<WithdrawMapper, Withdraw> {
 	public List<Withdraw> listWithdrawByUserId(String usersId){
 		return mapper.listWithdrawByUserId(usersId);
 	}
+
+	public void updateState(Withdraw withdraw){
+		mapper.update(withdraw);
+	}
 	public Withdraw get(String id) {
 		return super.get(id);
 	}

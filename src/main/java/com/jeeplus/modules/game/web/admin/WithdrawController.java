@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintTarget;
 import javax.validation.ConstraintViolationException;
 
 import org.apache.shiro.authz.annotation.Logical;
@@ -150,7 +151,10 @@ public class WithdrawController extends BaseController {
 		String idArray[] =ids.split(",");
 		for(String id : idArray){
 			Withdraw withdraw = withdrawService.get(id);
+			if("2".equals(withdraw.getState()) || "3".equals(withdraw.getState()))
+				continue;
 			withdraw.setState("2");
+//			withdrawService.updateState(withdraw);
 			withdrawService.save(withdraw);
 		}
 		j.setMsg("用户提现成功");

@@ -5,6 +5,7 @@ package com.jeeplus.modules.game.web.admin;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -148,12 +149,17 @@ public class UsersTasksItemController extends BaseController {
 	public AjaxJson updateStateAll(String ids, RedirectAttributes redirectAttributes) {
 		AjaxJson j = new AjaxJson();
 		String idArray[] =ids.split(",");
+		List selectIds = new ArrayList();
 		for(String id : idArray){
-//			usersTasksItemService.delete(usersTasksItemService.get(id));
-			UsersTasksItem item = usersTasksItemService.get(id);
-			item.setState("3");
-			usersTasksItemService.save(item);
+//			UsersTasksItem item = usersTasksItemService.get(id);
+//			if("3".equals(item.getState()) || "1".equals(item.getState()))
+//				continue;
+//			item.setState("3");
+//			usersTasksItemService.save(item);
+			selectIds.add(id);
 		}
+//		String selectIds = "("+ids+")";
+		usersTasksItemService.updateBatchPassItem(selectIds);
 		j.setMsg("更新用户任务成功");
 		return j;
 	}

@@ -90,10 +90,16 @@ $(document).ready(function() {
 		       
 		    }
 			,{
+		        field: 'users.realName',
+		        title: '姓名',
+		        sortable: true
+		       
+		    }
+			,{
 		        field: 'sum',
 		        title: '提现金额',
 		        sortable: true
-		       
+
 		    }
 			,{
 		        field: 'state',

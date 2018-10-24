@@ -52,10 +52,13 @@
 					<if test="dbName == 'mysql'">concat('%',#{users.id},'%')</if>
 			</if>
 			<if test="tasks != null and tasks.id != null and tasks.id != ''">
-				AND a.tasks_id LIKE 
+				AND a.tasks_id LIKE
 					<if test="dbName == 'oracle'">'%'||#{tasks.id}||'%'</if>
 					<if test="dbName == 'mssql'">'%'+#{tasks.id}+'%'</if>
 					<if test="dbName == 'mysql'">concat('%',#{tasks.id},'%')</if>
+			</if>
+			<if test="state != null and state != ''">
+				AND a.state = #{state}
 			</if>
 		</where>
 		<choose>
@@ -195,4 +198,13 @@
 		or
 		state = '4')
 	</select>
+
+	<update id="updateBatchPassItem">
+		update game_users_tasks_item
+		set state = '3'
+		where id in
+		<foreach collection="list" index="index" open="(" separator="," close=")" item="item">
+			#{item}
+		</foreach>
+	</update>
 </mapper>

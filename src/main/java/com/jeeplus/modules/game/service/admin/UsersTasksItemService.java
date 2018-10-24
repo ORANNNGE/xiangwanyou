@@ -27,9 +27,19 @@ public class UsersTasksItemService extends CrudService<UsersTasksItemMapper, Use
 	UsersTasksItemMapper mapper;
 
 	@Transactional(readOnly = false)
+	public void updateBatchPassItem(List ids){
+		mapper.updateBatchPassItem(ids);
+	}
+	@Transactional(readOnly = false)
 	public void updateUsersTasksItem(String imgUrl,String commitContent,String usersTasksId,String state) {
 		mapper.updateUsersTasksItem(imgUrl,commitContent,usersTasksId, state);
 	}
+
+	@Transactional(readOnly = false)
+	public void updateState(UsersTasksItem item) {
+		mapper.update(item);
+	}
+
 	public List<UsersTasksItem> selectByUsersIdAndTasksId(String usersId,String tasksId){
 		return mapper.selectByUsersIdAndTasksId(usersId, tasksId);
 	}

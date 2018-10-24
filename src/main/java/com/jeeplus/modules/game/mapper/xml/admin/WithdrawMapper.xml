@@ -13,7 +13,9 @@
 		a.update_date AS "updateDate",
 		a.remarks AS "remarks",
 		a.del_flag AS "delFlag",
-				
+
+		users.alipay_account AS "users.alipayAccount",
+		users.realname AS "users.realName",
 		users.phone_num AS "users.phoneNum"
 	</sql>
 	
@@ -39,6 +41,15 @@
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
 			${dataScope}
+			<if test="users != null and users.id != null and users.id != ''">
+				AND a.users_id LIKE
+				<if test="dbName == 'oracle'">'%'||#{users.id}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{users.id}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{users.id},'%')</if>
+			</if>
+			<if test="state != null and state != ''">
+				AND a.state = #{state}
+			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">

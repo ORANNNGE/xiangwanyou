@@ -32,7 +32,7 @@ $(document).ready(function() {
                //每页的记录行数（*）   
                pageSize: 10,  
                //可供选择的每页的行数（*）    
-               pageList: [10, 25, 50, 100],
+               pageList: [10, 25, 50, 100,500,1000,2000],
                //这个接口需要处理bootstrap table传递的固定参数,并返回特定格式的json数据  
                url: "${ctx}/game/admin/usersTasksItem/data",
                //默认值为 'limit',传给服务端的参数为：limit, offset, search, sort, order Else

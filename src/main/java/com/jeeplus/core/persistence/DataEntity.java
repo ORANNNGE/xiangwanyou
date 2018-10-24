@@ -4,6 +4,7 @@
 package com.jeeplus.core.persistence;
 
 import java.util.Date;
+import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.Length;
@@ -48,6 +49,7 @@ public abstract class DataEntity<T> extends BaseEntity<T> {
         if (!this.isNewRecord) {
             if (this.getIdType().equals(IDTYPE_UUID)) {
                 setId(System.currentTimeMillis() + "");
+                setId(UUID.randomUUID().toString());
             } else if (this.getIdType().equals(IDTYPE_AUTO)) {
                 //使用自增长不需要设置主键
             }
