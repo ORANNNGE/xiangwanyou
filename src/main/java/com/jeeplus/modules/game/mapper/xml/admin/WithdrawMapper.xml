@@ -13,10 +13,10 @@
 		a.update_date AS "updateDate",
 		a.remarks AS "remarks",
 		a.del_flag AS "delFlag",
-
-		users.alipay_account AS "users.alipayAccount",
+				
+		users.phone_num AS "users.phoneNum",
 		users.realname AS "users.realName",
-		users.phone_num AS "users.phoneNum"
+		users.alipay_account AS "users.alipayAccount"
 	</sql>
 	
 	<sql id="withdrawJoins">
@@ -42,10 +42,10 @@
 			a.del_flag = #{DEL_FLAG_NORMAL}
 			${dataScope}
 			<if test="users != null and users.id != null and users.id != ''">
-				AND a.users_id LIKE
-				<if test="dbName == 'oracle'">'%'||#{users.id}||'%'</if>
-				<if test="dbName == 'mssql'">'%'+#{users.id}+'%'</if>
-				<if test="dbName == 'mysql'">concat('%',#{users.id},'%')</if>
+				AND a.users_id = #{users.id}
+			</if>
+			<if test="sum != null and sum != ''">
+				AND a.sum = #{sum}
 			</if>
 			<if test="state != null and state != ''">
 				AND a.state = #{state}
@@ -136,8 +136,9 @@
 	<select id="findUniqueByProperty" resultType="Withdraw" statementType="STATEMENT">
 		select * FROM game_withdraw  where ${propertyName} = '${value}'
 	</select>
+
 	<select id="listWithdrawByUserId" resultType="Withdraw">
-		SELECT 
+		SELECT
 		<include refid="withdrawColumns"/>
 		FROM game_withdraw a
 		<include refid="withdrawJoins"/>

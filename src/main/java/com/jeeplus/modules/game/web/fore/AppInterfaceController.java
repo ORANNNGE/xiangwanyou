@@ -332,7 +332,8 @@ public class AppInterfaceController {
 	                              Date createDate = new Date();
 	                              SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
 	                              String d = format.format(createDate);
-//	                              String rootPath = "D://apache-tomcat-7.0.73/webapps/jeeplus";
+//	                              String rootPath = "D://idea_workspace/xiangwanyou/target/jeeplus";
+
 	                              String filePath = "userfiles/commitImgupload/leave/"+d;
 	                              String fileName = UUID.randomUUID()+"."+ext;  
 	                              relativePath = filePath+"/"+fileName; 

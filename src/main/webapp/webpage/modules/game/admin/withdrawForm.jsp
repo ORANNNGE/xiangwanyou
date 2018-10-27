@@ -58,7 +58,7 @@
 					<td class="width-15 active"><label class="pull-right">用户：</label></td>
 					<td class="width-35">
 						<sys:gridselect url="${ctx}/game/admin/users/data" id="users" name="users.id" value="${withdraw.users.id}" labelName="users.phoneNum" labelValue="${withdraw.users.phoneNum}"
-							 title="选择用户" cssClass="form-control required" fieldLabels="手机号" fieldKeys="phoneNum" searchLabels="手机号" searchKeys="phoneNum" ></sys:gridselect>
+							 title="选择用户" cssClass="form-control required" fieldLabels="手机号|姓名|支付宝" fieldKeys="phoneNum|realName|alipayAccount" searchLabels="手机号|姓名|支付宝" searchKeys="phoneNum|realName|alipayAccount" ></sys:gridselect>
 					</td>
 					<td class="width-15 active"><label class="pull-right">提现金额：</label></td>
 					<td class="width-35">
