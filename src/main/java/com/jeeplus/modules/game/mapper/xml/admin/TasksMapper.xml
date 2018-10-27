@@ -165,8 +165,20 @@
 		<include refid="tasksColumns"/>
 		FROM game_tasks a
 		order by
-		cast(createDate as datetime)
+		create_date
 		desc
+		limit 0,2
 	</select>
+
+
+	<select id="getTodayTasks" resultType="Tasks">
+		SELECT
+		<include refid="tasksColumns"/>
+		FROM game_tasks a
+		where
+		TIMESTAMPDIFF(second,create_date,now())
+		between 0 and 86400
+	</select>
+
 
 </mapper>

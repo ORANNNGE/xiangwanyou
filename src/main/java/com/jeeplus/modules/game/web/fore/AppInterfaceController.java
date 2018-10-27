@@ -186,7 +186,12 @@ public class AppInterfaceController {
 		//查询任务
 				System.out.println("---------------");
 				List<Tasks> tasks = tasksService.listTasks();
+				List<Tasks> todayTasksList = tasksService.getTodayTasks();
 				for (Tasks tasks2 : tasks) {
+					//修改图片路径以匹配前端
+					tasks2.setIcon(tasks2.getIcon().substring(10, tasks2.getIcon().length()));
+				}
+				for (Tasks tasks2 : todayTasksList) {
 					//修改图片路径以匹配前端
 					tasks2.setIcon(tasks2.getIcon().substring(10, tasks2.getIcon().length()));
 				}
@@ -195,6 +200,7 @@ public class AppInterfaceController {
 
 				Map<String, Object> map = new HashMap<>();
 				map.put("tasks", tasks);
+				map.put("todayTasks", todayTasksList);
 				map.put("stat", stat);
 				return new AppResponse<>(1,"任务列表",map);
 	}
