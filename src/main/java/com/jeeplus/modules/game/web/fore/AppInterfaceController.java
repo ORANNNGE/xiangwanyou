@@ -186,7 +186,12 @@ public class AppInterfaceController {
 		//查询任务
 				System.out.println("---------------");
 				List<Tasks> tasks = tasksService.listTasks();
+				List<Tasks> todayTasksList = tasksService.getTodayTasks();
 				for (Tasks tasks2 : tasks) {
+					//修改图片路径以匹配前端
+					tasks2.setIcon(tasks2.getIcon().substring(10, tasks2.getIcon().length()));
+				}
+				for (Tasks tasks2 : todayTasksList) {
 					//修改图片路径以匹配前端
 					tasks2.setIcon(tasks2.getIcon().substring(10, tasks2.getIcon().length()));
 				}
@@ -195,6 +200,7 @@ public class AppInterfaceController {
 
 				Map<String, Object> map = new HashMap<>();
 				map.put("tasks", tasks);
+				map.put("todayTasks", todayTasksList);
 				map.put("stat", stat);
 				return new AppResponse<>(1,"任务列表",map);
 	}
@@ -332,7 +338,8 @@ public class AppInterfaceController {
 	                              Date createDate = new Date();
 	                              SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
 	                              String d = format.format(createDate);
-//	                              String rootPath = "D://apache-tomcat-7.0.73/webapps/jeeplus";
+//	                              String rootPath = "D://idea_workspace/xiangwanyou/target/jeeplus";
+
 	                              String filePath = "userfiles/commitImgupload/leave/"+d;
 	                              String fileName = UUID.randomUUID()+"."+ext;  
 	                              relativePath = filePath+"/"+fileName; 

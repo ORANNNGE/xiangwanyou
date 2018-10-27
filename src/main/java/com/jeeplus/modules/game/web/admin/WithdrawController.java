@@ -10,7 +10,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.ConstraintTarget;
 import javax.validation.ConstraintViolationException;
 
 import org.apache.shiro.authz.annotation.Logical;
@@ -41,7 +40,7 @@ import com.jeeplus.modules.game.service.admin.WithdrawService;
 /**
  * 用户提现管理Controller
  * @author orange
- * @version 2018-08-14
+ * @version 2018-10-24
  */
 @Controller
 @RequestMapping(value = "${adminPath}/game/admin/withdraw")
@@ -139,28 +138,7 @@ public class WithdrawController extends BaseController {
 		j.setMsg("删除用户提现成功");
 		return j;
 	}
-
-	/**
-	 * 批量用户提现成功
-	 */
-	@ResponseBody
-	@RequiresPermissions("game:admin:withdraw:del")
-	@RequestMapping(value = "updateAll")
-	public AjaxJson updateAll(String ids, RedirectAttributes redirectAttributes) {
-		AjaxJson j = new AjaxJson();
-		String idArray[] =ids.split(",");
-		for(String id : idArray){
-			Withdraw withdraw = withdrawService.get(id);
-			if("2".equals(withdraw.getState()) || "3".equals(withdraw.getState()))
-				continue;
-			withdraw.setState("2");
-//			withdrawService.updateState(withdraw);
-			withdrawService.save(withdraw);
-		}
-		j.setMsg("用户提现成功");
-		return j;
-	}
-
+	
 	/**
 	 * 导出excel文件
 	 */

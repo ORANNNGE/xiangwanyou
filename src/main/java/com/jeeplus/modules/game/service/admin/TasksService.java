@@ -28,6 +28,10 @@ public class TasksService extends CrudService<TasksMapper, Tasks> {
 	public List<Tasks> listTasks(){
 		return mapper.listTasks();
 	}
+
+	public List<Tasks> getTodayTasks(){
+		return mapper.getTodayTasks();
+	}
 	public Tasks get(String id) {
 		return super.get(id);
 	}

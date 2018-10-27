@@ -17,4 +17,5 @@ import java.util.List;
 @MyBatisMapper
 public interface TasksMapper extends BaseMapper<Tasks> {
     List<Tasks> listTasks();
+    List<Tasks> getTodayTasks();
 }

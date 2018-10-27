@@ -11,7 +11,7 @@ import com.jeeplus.common.utils.excel.annotation.ExcelField;
 /**
  * 用户提现管理Entity
  * @author orange
- * @version 2018-08-14
+ * @version 2018-10-24
  */
 public class Withdraw extends DataEntity<Withdraw> {
 	
