@@ -138,7 +138,24 @@ public class WithdrawController extends BaseController {
 		j.setMsg("删除用户提现成功");
 		return j;
 	}
-	
+
+	/**
+	 * 批量用户提现成功
+	 */
+	@ResponseBody
+	@RequiresPermissions("game:admin:withdraw:del")
+	@RequestMapping(value = "updateAll")
+	public AjaxJson updateAll(String ids, RedirectAttributes redirectAttributes) {
+		AjaxJson j = new AjaxJson();
+		String idArray[] =ids.split(",");
+		for(String id : idArray){
+			Withdraw withdraw = withdrawService.get(id);
+			withdraw.setState("2");
+			withdrawService.save(withdraw);
+		}
+		j.setMsg("用户提现成功");
+		return j;
+	}
 	/**
 	 * 导出excel文件
 	 */

@@ -180,5 +180,16 @@
 		between 0 and 86400
 	</select>
 
+	<select id="getLimitTasks" resultType="Tasks">
+		SELECT
+		<include refid="tasksColumns"/>
+		FROM game_tasks a
+		where
+		a.expire_hours != 24
+		and
+		TIMESTAMPDIFF(second,create_date,now())
+		between 0 and a.expire_hours*3600
+	</select>
+
 
 </mapper>

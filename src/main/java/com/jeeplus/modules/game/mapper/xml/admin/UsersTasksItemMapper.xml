@@ -19,7 +19,8 @@
 		users.realname AS "users.realName",
 				
 		tasks.name AS "tasks.name",
-		tasks.phase AS "tasks.phase"
+		tasks.phase AS "tasks.phase",
+		tasks.reward as "tasks.reward"
 	</sql>
 	
 	<sql id="usersTasksItemJoins">

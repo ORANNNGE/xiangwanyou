@@ -141,6 +141,7 @@ $(document).ready(function() {
 	  $('#withdrawTable').on('check.bs.table uncheck.bs.table load-success.bs.table ' +
                 'check-all.bs.table uncheck-all.bs.table', function () {
             $('#remove').prop('disabled', ! $('#withdrawTable').bootstrapTable('getSelections').length);
+          $('#updateAll').prop('disabled', ! $('#withdrawTable').bootstrapTable('getSelections').length);
             $('#edit').prop('disabled', $('#withdrawTable').bootstrapTable('getSelections').length!=1);
         });
 		  
@@ -206,6 +207,22 @@ $(document).ready(function() {
           	   
 		})
   }
+	function updateAll(){
+
+		jp.confirm('确认要提现吗？', function(){
+			jp.loading();
+			jp.get("${ctx}/game/admin/withdraw/updateAll?ids=" + getIdSelections(), function(data){
+				if(data.success){
+					$('#withdrawTable').bootstrapTable('refresh');
+					jp.success(data.msg);
+				}else{
+					jp.error(data.msg);
+				}
+			})
+
+		})
+	}
+
    function add(){
 	  jp.openDialog('新增用户提现', "${ctx}/game/admin/withdraw/form",'800px', '500px', $('#withdrawTable'));
   }

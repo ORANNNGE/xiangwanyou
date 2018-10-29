@@ -189,11 +189,11 @@ public class AppInterfaceController {
 				List<Tasks> todayTasksList = tasksService.getTodayTasks();
 				for (Tasks tasks2 : tasks) {
 					//修改图片路径以匹配前端
-					tasks2.setIcon(tasks2.getIcon().substring(10, tasks2.getIcon().length()));
+					tasks2.setIcon(tasks2.getIcon().substring(1, tasks2.getIcon().length()));
 				}
 				for (Tasks tasks2 : todayTasksList) {
 					//修改图片路径以匹配前端
-					tasks2.setIcon(tasks2.getIcon().substring(10, tasks2.getIcon().length()));
+					tasks2.setIcon(tasks2.getIcon().substring(1, tasks2.getIcon().length()));
 				}
 				//任务统计
 				List<TasksStat> stat = tasksStatService.selectStat();
@@ -204,8 +204,41 @@ public class AppInterfaceController {
 				map.put("stat", stat);
 				return new AppResponse<>(1,"任务列表",map);
 	}
-	
-	
+
+	@RequestMapping(value="getAllTasks")
+	@ResponseBody
+	public AppResponse<List<Tasks>> getAllTasks(){
+		List<Tasks> tasksList = tasksService.findList(new Tasks());
+		for (Tasks tasks : tasksList) {
+			tasks.setIcon(tasks.getIcon().substring(1, tasks.getIcon().length()));
+			System.out.println(tasks.getDetails());
+		}
+		return new AppResponse<>(1,"",tasksList);
+	}
+
+	@RequestMapping(value="getTodayTasks")
+	@ResponseBody
+	public AppResponse<List<Tasks>> getTodayTasks(){
+		List<Tasks> tasksList = tasksService.getTodayTasks();
+		for (Tasks tasks : tasksList) {
+			tasks.setIcon(tasks.getIcon().substring(1, tasks.getIcon().length()));
+			System.out.println(tasks.getDetails());
+		}
+		return new AppResponse<>(1,"",tasksList);
+	}
+
+	@RequestMapping(value="getLimitTasks")
+	@ResponseBody
+	public AppResponse<List<Tasks>> getLimitTasks(){
+//		List<Tasks> tasksList = tasksService.getTodayTasks();
+//		for (Tasks tasks : tasksList) {
+//			tasks.setIcon(tasks.getIcon().substring(1, tasks.getIcon().length()));
+//			System.out.println(tasks.getDetails());
+//		}
+//		return new AppResponse<>(1,"",tasksList);
+		return null;
+	}
+
 	@RequestMapping(value="logout")
 	@ResponseBody
 	public String logout(HttpServletRequest req) {
@@ -231,7 +264,7 @@ public class AppInterfaceController {
 		String userId = (String) session.getAttribute("userId");
 //		Tasks tasks = tasksService.findUniqueByProperty("id", taskId);
 //		if(tasks!=null) {
-//			tasks.setIcon(tasks.getIcon().substring(10, tasks.getIcon().length()));
+//			tasks.setIcon(tasks.getIcon().substring(1, tasks.getIcon().length()));
 //			System.out.println(tasks.toString());
 //		}
 		
@@ -247,7 +280,7 @@ public class AppInterfaceController {
 			for (Tasks tasks : tss) {
 				System.out.println("***tasks:"+ tasks.toString());
 				if (tasks.getId().equals(taskId)) {
-					tasks.setIcon(tasks.getIcon().substring(10, tasks.getIcon().length()));
+					tasks.setIcon(tasks.getIcon().substring(1, tasks.getIcon().length()));
 					uniTasks = tasks;
 					System.out.println("-----tasks:"+ tasks.toString());
 				}
@@ -653,7 +686,7 @@ public class AppInterfaceController {
 		Shop shop = new Shop();
 		List<Shop> shops = shopService.findList(shop);
 		for (Shop s : shops) {
-			s.setPicture(s.getPicture().substring(10,s.getPicture().length()));
+			s.setPicture(s.getPicture().substring(1,s.getPicture().length()));
 			System.out.println(s.toString());
 		}
 		
@@ -665,7 +698,7 @@ public class AppInterfaceController {
 	public AppResponse<Shop> shopDetails(String id){
 		Shop shop = shopService.findUniqueByProperty("id", id);
 		if(shop != null) {
-			shop.setPicture(shop.getPicture().substring(10, shop.getPicture().length()));
+			shop.setPicture(shop.getPicture().substring(1, shop.getPicture().length()));
 			return new AppResponse<>(1,"success",shop);
 		}
 		return new AppResponse<>(0,"fail",null);
@@ -679,7 +712,7 @@ public class AppInterfaceController {
 	public AppResponse<List<Notice>> getNotice(){
 		List<Notice> notices = noticeService.getNotice();
 		for (Notice notice : notices) {
-			notice.setPicture(notice.getPicture().substring(10, notice.getPicture().length()));
+			notice.setPicture(notice.getPicture().substring(1, notice.getPicture().length()));
 		}
 		return new AppResponse<>(1,"查询到了"+notices.size()+"条通告",notices);
 	}
