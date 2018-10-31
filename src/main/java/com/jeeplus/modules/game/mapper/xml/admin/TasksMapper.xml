@@ -13,6 +13,8 @@
 		a.num_total AS "numTotal",
 		a.num_remain AS "numRemain",
 		a.reward AS "reward",
+		a.expire_hours AS "expireHours",
+		a.create_by AS "createBy.id",
 		a.create_date AS "createDate",
 		a.update_by AS "updateBy.id",
 		a.update_date AS "updateDate",
@@ -92,6 +94,7 @@
 			num_total,
 			num_remain,
 			reward,
+			expire_hours,
 			create_by,
 			create_date,
 			update_by,
@@ -109,6 +112,7 @@
 			#{numTotal},
 			#{numRemain},
 			#{reward},
+			#{expireHours},
 			#{createBy.id},
 			#{createDate},
 			#{updateBy.id},
@@ -129,6 +133,7 @@
 			num_total = #{numTotal},
 			num_remain = #{numRemain},
 			reward = #{reward},
+			expire_hours = #{expireHours},
 			update_by = #{updateBy.id},
 			update_date = #{updateDate},
 			remarks = #{remarks}
@@ -165,12 +170,6 @@
 		limit 0,2
 	</select>
 
-	<select id="getAllTasks" resultMap="TasksResult">
-		SELECT
-		<include refid="tasksColumns"/>
-		FROM game_tasks a
-		<include refid="tasksJoins"/>
-	</select>
 
 	<select id="getTodayTasks" resultType="Tasks">
 		SELECT

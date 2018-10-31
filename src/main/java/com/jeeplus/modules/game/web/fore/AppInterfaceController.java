@@ -16,8 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
 import com.jeeplus.modules.game.util.MyResourceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -209,34 +207,24 @@ public class AppInterfaceController {
 
 	@RequestMapping(value="getAllTasks")
 	@ResponseBody
-	public AppResponse<Object> getAllTasks(Integer pageNum,Integer pageSize){
-//		Integer size = pageSize == null ? 10 : pageSize;
-		PageHelper.startPage(pageNum, pageSize);
-
-		List<Tasks> tasksList = tasksService.getAllTasks();
-
+	public AppResponse<List<Tasks>> getAllTasks(){
+		List<Tasks> tasksList = tasksService.findList(new Tasks());
 		for (Tasks tasks : tasksList) {
 			tasks.setIcon(tasks.getIcon().substring(1, tasks.getIcon().length()));
-//			System.out.println(tasks.getDetails());
+			System.out.println(tasks.getDetails());
 		}
-		PageInfo page = new PageInfo(tasksList);
-		return new AppResponse<>(1,"",page);
+		return new AppResponse<>(1,"",tasksList);
 	}
 
 	@RequestMapping(value="getTodayTasks")
 	@ResponseBody
-	public AppResponse<Object> getTodayTasks(Integer pageNum,Integer pageSize){
-//		Integer size = pageSize == null ? 10 : pageSize;
-
-		PageHelper.startPage(pageNum, pageSize);
+	public AppResponse<List<Tasks>> getTodayTasks(){
 		List<Tasks> tasksList = tasksService.getTodayTasks();
 		for (Tasks tasks : tasksList) {
 			tasks.setIcon(tasks.getIcon().substring(1, tasks.getIcon().length()));
-//			System.out.println(tasks.getDetails());
+			System.out.println(tasks.getDetails());
 		}
-		PageInfo page = new PageInfo(tasksList);
-
-		return new AppResponse<>(1,"",page);
+		return new AppResponse<>(1,"",tasksList);
 	}
 
 	@RequestMapping(value="getLimitTasks")
@@ -274,10 +262,32 @@ public class AppInterfaceController {
 	public AppResponse<Map<String, Object>> getTasks(String taskId,HttpServletRequest request){
 		HttpSession session = request.getSession();
 		String userId = (String) session.getAttribute("userId");
+//		Tasks tasks = tasksService.findUniqueByProperty("id", taskId);
+//		if(tasks!=null) {
+//			tasks.setIcon(tasks.getIcon().substring(1, tasks.getIcon().length()));
+//			System.out.println(tasks.toString());
+//		}
+		
+		Tasks t = new Tasks();
+		//查询listTasks
+		List<Tasks> tss = tasksService.findList(t);
+//		System.out.println("tss"+tss.size() + "***taskid"+ tasksid);
 		//将要返回的tasks
-		Tasks uniTasks = tasksService.get(taskId);
-		uniTasks.setIcon(uniTasks.getIcon().substring(1, uniTasks.getIcon().length()));
-
+		Tasks uniTasks = null;
+		//若查询不为空
+		if(tss.size() >= 1) {
+			//遍历，并且将id=tasksid的对象给unitasks
+			for (Tasks tasks : tss) {
+				System.out.println("***tasks:"+ tasks.toString());
+				if (tasks.getId().equals(taskId)) {
+					tasks.setIcon(tasks.getIcon().substring(1, tasks.getIcon().length()));
+					uniTasks = tasks;
+					System.out.println("-----tasks:"+ tasks.toString());
+				}
+			}
+		}
+		
+		
 		//返回内容
 		Map<String , Object> content = new HashMap<>();
 		if(uniTasks == null) {
@@ -299,9 +309,7 @@ public class AppInterfaceController {
 				}
 			}
 		}else {
-			content.put("userTaskItemState", "");
-			content.put("userTaskItemId", "");
-			content.put("userTaskItemCommit", "");
+			content.put("userTaskItemState", '0');
 		}
 		content.put("task", uniTasks);
 		return new AppResponse<>(1,"任务详情",content);

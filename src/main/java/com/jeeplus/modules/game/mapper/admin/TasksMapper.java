@@ -18,5 +18,4 @@ import java.util.List;
 public interface TasksMapper extends BaseMapper<Tasks> {
     List<Tasks> listTasks();
     List<Tasks> getTodayTasks();
-    List<Tasks> getAllTasks();
 }
