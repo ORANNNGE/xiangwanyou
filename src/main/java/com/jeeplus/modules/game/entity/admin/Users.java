@@ -9,6 +9,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.jeeplus.core.persistence.DataEntity;
 import com.jeeplus.common.utils.excel.annotation.ExcelField;
 
+import javax.persistence.Transient;
+
 /**
  * 用户管理Entity
  * @author orange
@@ -28,8 +30,37 @@ public class Users extends DataEntity<Users> {
 	private String area;		// 地区
 	private String phoneOS;		// 手机操作系统
 	private Integer status;		// 状态
-	private Date expireDate;		// 到期时间
-	
+	private Date expireDate;// 到期时间
+	@Transient
+	private String usersNum;
+
+	@Override
+	public String toString() {
+		return "Users{" +
+				"phoneNum='" + phoneNum + '\'' +
+				", password='" + password + '\'' +
+				", balance=" + balance +
+				", realName='" + realName + '\'' +
+				", sex='" + sex + '\'' +
+				", idcard='" + idcard + '\'' +
+				", alipayName='" + alipayName + '\'' +
+				", alipayAccount='" + alipayAccount + '\'' +
+				", area='" + area + '\'' +
+				", phoneOS='" + phoneOS + '\'' +
+				", status=" + status +
+				", expireDate=" + expireDate +
+				", usersNum='" + usersNum + '\'' +
+				'}';
+	}
+
+	public String getUsersNum() {
+		return usersNum;
+	}
+
+	public void setUsersNum(String usersNum) {
+		this.usersNum = usersNum;
+	}
+
 	public Users() {
 		super();
 	}

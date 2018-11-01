@@ -18,6 +18,8 @@ import javax.servlet.http.HttpSession;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.jeeplus.modules.game.entity.admin.*;
+import com.jeeplus.modules.game.service.admin.*;
 import com.jeeplus.modules.game.util.MyResourceUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,22 +32,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.jeeplus.common.json.AjaxJson;
 import com.jeeplus.common.utils.StringUtils;
-import com.jeeplus.modules.game.entity.admin.Inform;
-import com.jeeplus.modules.game.entity.admin.Notice;
-import com.jeeplus.modules.game.entity.admin.Shop;
-import com.jeeplus.modules.game.entity.admin.Tasks;
-import com.jeeplus.modules.game.entity.admin.TasksStat;
-import com.jeeplus.modules.game.entity.admin.Users;
-import com.jeeplus.modules.game.entity.admin.UsersTasksItem;
-import com.jeeplus.modules.game.entity.admin.Withdraw;
-import com.jeeplus.modules.game.service.admin.InformService;
-import com.jeeplus.modules.game.service.admin.NoticeService;
-import com.jeeplus.modules.game.service.admin.ShopService;
-import com.jeeplus.modules.game.service.admin.TasksService;
-import com.jeeplus.modules.game.service.admin.TasksStatService;
-import com.jeeplus.modules.game.service.admin.UsersService;
-import com.jeeplus.modules.game.service.admin.UsersTasksItemService;
-import com.jeeplus.modules.game.service.admin.WithdrawService;
 import com.jeeplus.modules.game.util.AppResponse;
 import com.jeeplus.modules.game.util.MsgUtil;
 import com.jeeplus.modules.sys.service.SystemService;
@@ -70,7 +56,8 @@ public class AppInterfaceController {
 	NoticeService noticeService;
 	@Autowired
 	InformService informService;
-	
+	@Autowired
+	UsersNumService usersNumService;
 	/**
 	 * app接口登录
 	 * @param phoneNum 手机号
@@ -93,6 +80,12 @@ public class AppInterfaceController {
 				// '1' 代表密码正确
 				session.setAttribute("userId", uniUser.getId());
 				System.out.println("userId:"+uniUser.getId());
+				UsersNum num = usersNumService.findUniqueByProperty("users_id", uniUser.getId());
+				if(num != null){
+					uniUser.setUsersNum(num.getId());
+				}else {
+					uniUser.setUsersNum(uniUser.getId());
+				}
 				return new AppResponse<Users>(1,"登录成功",uniUser);
 			}else {
 				//2 密码错误
@@ -103,6 +96,7 @@ public class AppInterfaceController {
 			return new AppResponse<Users>(3,"用户不存在",null);
 		}
 	}
+
 	/**
 	 * 验证手机号是否存在
 	 * @param phoneNum
@@ -718,6 +712,19 @@ public class AppInterfaceController {
 		List<Inform> informs = informService.getInform();
 		return new AppResponse<>(1,"查询到了"+informs.size()+"条通告",informs);
 	}
-	
+
+	@RequestMapping("generateUsersNum")
+	@ResponseBody
+	public String generateUsersNum(){
+		List<Users> usersList = usersService.findList(new Users());
+
+		for (Users users : usersList) {
+			UsersNum num = new UsersNum();
+			num.setUsers(users);
+			usersNumService.save(num);
+		}
+		return "success";
+	}
+
 	
 }
