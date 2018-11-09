@@ -82,8 +82,10 @@ public class AppInterfaceController {
 				System.out.println("userId:"+uniUser.getId());
 				UsersNum num = usersNumService.findUniqueByProperty("users_id", uniUser.getId());
 				if(num != null){
+					//userNum不为空，则将用户编号设置为num.getId()
 					uniUser.setUsersNum(num.getId());
 				}else {
+					//userNum为空，则将用户编号设置为 用户id
 					uniUser.setUsersNum(uniUser.getId());
 				}
 				return new AppResponse<Users>(1,"登录成功",uniUser);
@@ -165,6 +167,10 @@ public class AppInterfaceController {
 			users.setBalance(0.0);
 			users.setExpireDate(new Date());
 			usersService.save(users);
+			UsersNum num = new UsersNum();
+
+			num.setUsers(users);
+			usersNumService.save(num);
 			//注册成功
 			return new AppResponse<String>(1,"注册成功",null);
 		}else {
@@ -192,12 +198,16 @@ public class AppInterfaceController {
 					tasks2.setIcon(tasks2.getIcon().substring(1, tasks2.getIcon().length()));
 				}
 				//任务统计
-				List<TasksStat> stat = tasksStatService.selectStat();
-
+//				List<TasksStat> stat = tasksStatService.selectStat();
+				//从配置文件sysConfig中获取任务统计的id
+				String tasksStatId = MyResourceUtil.getConfigByName("tasksStatId");
+				TasksStat stat = new TasksStat();
+				stat.setId(tasksStatId);
+				List<TasksStat> statList = tasksStatService.findList(stat);
 				Map<String, Object> map = new HashMap<>();
 				map.put("tasks", tasks);
 				map.put("todayTasks", todayTasksList);
-				map.put("stat", stat);
+				map.put("stat", statList);
 				return new AppResponse<>(1,"任务列表",map);
 	}
 
@@ -311,6 +321,7 @@ public class AppInterfaceController {
 	public AppResponse<Object> addUsersTasksItem(String taskId ,String userId,HttpServletRequest request){
 //		HttpSession session = request.getSession();
 //		String userId = (String) session.getAttribute("userId");
+		UsersTasksItem item = new UsersTasksItem();
 		if(userId == null) {
 			return new AppResponse<>(0,"抢任务失败",null);
 		}
@@ -320,15 +331,16 @@ public class AppInterfaceController {
 		tasks.setId(taskId);
 		users.setId(userId);
 		//设置item的各个属性
-		UsersTasksItem item = new UsersTasksItem();
+		List<UsersTasksItem> itemList = itemService.selectByUsersIdAndTasksId(userId, taskId);
+		if(itemList.size() > 0){
+			return new AppResponse<>(0,"已抢过该任务",null);
+		}
 		item.setUsers(users);
 		item.setTasks(tasks);
 		item.setPicture("未提交");
 		item.setRemarks("未提交");
 		item.setState("1");
 		itemService.save(item);
-		item.setUsers(null);
-		item.setTasks(null);
 		//返回item的状态
 		return new AppResponse<>(1,"抢任务成功",item);
 	}
