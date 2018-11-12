@@ -93,6 +93,7 @@
 			num_total,
 			num_remain,
 			reward,
+			expire_hours,
 			create_by,
 			create_date,
 			update_by,
@@ -110,6 +111,7 @@
 			#{numTotal},
 			#{numRemain},
 			#{reward},
+			#{expireHours},
 			#{createBy.id},
 			#{createDate},
 			#{updateBy.id},
@@ -130,6 +132,7 @@
 			num_total = #{numTotal},
 			num_remain = #{numRemain},
 			reward = #{reward},
+			expire_hours = #{expireHours},
 			update_by = #{updateBy.id},
 			update_date = #{updateDate},
 			remarks = #{remarks}
@@ -178,6 +181,8 @@
 		<include refid="tasksColumns"/>
 		FROM game_tasks a
 		where
+		a.expire_hours = 24
+		and
 		TIMESTAMPDIFF(second,create_date,now())
 		between 0 and 86400
 	</select>

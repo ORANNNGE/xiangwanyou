@@ -149,12 +149,12 @@ $(document).ready(function() {
 		        sortable: true
 		       
 		    }
-			// ,{
-		    //     field: 'expireHours',
-		    //     title: '限时(小时)',
-		    //     sortable: true
-		    //
-		    // }
+			,{
+		        field: 'expireHours',
+		        title: '限时(小时)',
+		        sortable: true
+
+		    }
 			,{
 		        field: 'createDate',
 		        title: '创建时间',

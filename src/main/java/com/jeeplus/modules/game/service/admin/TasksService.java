@@ -29,6 +29,10 @@ public class TasksService extends CrudService<TasksMapper, Tasks> {
 		return mapper.listTasks();
 	}
 
+	public List<Tasks> getLimitTasks(){
+		return mapper.getLimitTasks();
+	}
+
 	public List<Tasks> getAllTasks(){
 		return mapper.getAllTasks();
 	}

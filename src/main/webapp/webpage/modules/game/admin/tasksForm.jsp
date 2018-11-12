@@ -101,7 +101,7 @@
 					<td class="width-35">
 						<form:input path="numTotal" htmlEscape="false"    class="form-control required"/>
 					</td>
-					<td class="width-15 active"><label class="pull-right"><font color="red">*</font>剩余任务数量：</label></td>
+					<td class="width-15 active"><label class="pull-right"><font color="red">*</font>已领任务数量：</label></td>
 					<td class="width-35">
 						<form:input path="numRemain" htmlEscape="false"    class="form-control required"/>
 					</td>
@@ -111,10 +111,10 @@
 					<td class="width-35">
 						<form:input path="reward" htmlEscape="false"    class="form-control required"/>
 					</td>
-					<%--<td class="width-15 active"><label class="pull-right">限时(小时)：</label></td>--%>
-					<%--<td class="width-35">--%>
-						<%--<form:input path="expireHours" htmlEscape="false"   max="240"  min="1" class="form-control  digits"/>--%>
-					<%--</td>--%>
+					<td class="width-15 active"><label class="pull-right">限时(小时)：</label></td>
+					<td class="width-35">
+						<form:input path="expireHours" htmlEscape="false"   max="240"  min="1" class="form-control  digits" value="24"/>
+					</td>
 				</tr>
 				<tr>
 					<td class="width-15 active"><label class="pull-right">备注信息：</label></td>
