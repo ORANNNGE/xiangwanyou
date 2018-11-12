@@ -195,7 +195,7 @@ public class AppInterfaceController {
 				}
 				for (Tasks tasks2 : todayTasksList) {
 					//修改图片路径以匹配前端
-						tasks2.setIcon(tasks2.getIcon().substring(1, tasks2.getIcon().length()));
+					tasks2.setIcon(tasks2.getIcon().substring(1, tasks2.getIcon().length()));
 				}
 				//任务统计
 //				List<TasksStat> stat = tasksStatService.selectStat();
@@ -204,24 +204,13 @@ public class AppInterfaceController {
 				TasksStat stat = new TasksStat();
 				stat.setId(tasksStatId);
 				List<TasksStat> statList = tasksStatService.findList(stat);
-				List<Tasks> limitTasksList = tasksService.getLimitTasks();
-				for (Tasks tasks1 : limitTasksList) {
-						tasks1.setIcon(tasks1.getIcon().substring(1, tasks1.getIcon().length()));
-				}
 				Map<String, Object> map = new HashMap<>();
 				map.put("tasks", tasks);
 				map.put("todayTasks", todayTasksList);
-				map.put("limitTasksList", limitTasksList);
 				map.put("stat", statList);
 				return new AppResponse<>(1,"任务列表",map);
 	}
 
-	/**
-	 * 获取全部任务
-	 * @param pageNum
-	 * @param pageSize
-	 * @return
-	 */
 	@RequestMapping(value="getAllTasks")
 	@ResponseBody
 	public AppResponse<Object> getAllTasks(Integer pageNum,Integer pageSize){
@@ -256,17 +245,14 @@ public class AppInterfaceController {
 
 	@RequestMapping(value="getLimitTasks")
 	@ResponseBody
-	public AppResponse<Object> getLimitTasks(Integer pageNum,Integer pageSize){
-		PageHelper.startPage(pageNum, pageSize);
-
-		List<Tasks> tasksList = tasksService.getLimitTasks();
-		for (Tasks tasks : tasksList) {
-			tasks.setIcon(tasks.getIcon().substring(1, tasks.getIcon().length()));
-			System.out.println(tasks.getDetails());
-		}
-		PageInfo page = new PageInfo(tasksList);
-
-		return new AppResponse<>(1,"",page);
+	public AppResponse<List<Tasks>> getLimitTasks(){
+//		List<Tasks> tasksList = tasksService.getTodayTasks();
+//		for (Tasks tasks : tasksList) {
+//			tasks.setIcon(tasks.getIcon().substring(1, tasks.getIcon().length()));
+//			System.out.println(tasks.getDetails());
+//		}
+//		return new AppResponse<>(1,"",tasksList);
+		return null;
 	}
 
 	@RequestMapping(value="logout")
