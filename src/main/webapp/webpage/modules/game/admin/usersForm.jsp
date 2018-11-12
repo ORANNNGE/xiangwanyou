@@ -62,18 +62,15 @@
 					<td class="width-35">
 						<form:input path="phoneNum" htmlEscape="false"    class="form-control "/>
 					</td>
-					<td class="width-15 active"><label class="pull-right">分组：</label></td>
-					<td class="width-35">
-						<form:select path="gameGroup" class="form-control ">
-							<form:option value="" label=""/>
-							<form:options items="${fns:getDictList('game_group')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
-						</form:select>
-					</td>
-				</tr>
-				<tr>
 					<td class="width-15 active"><label class="pull-right">密码：</label></td>
 					<td class="width-35">
 						<form:input path="password" htmlEscape="false"    class="form-control "/>
+					</td>
+				</tr>
+				<tr>
+					<td class="width-15 active"><label class="pull-right">余额：</label></td>
+					<td class="width-35">
+						<form:input path="balance" htmlEscape="false"    class="form-control "/>
 					</td>
 					<td class="width-15 active"><label class="pull-right">真实姓名：</label></td>
 					<td class="width-35">

@@ -19,4 +19,5 @@ public interface TasksMapper extends BaseMapper<Tasks> {
     List<Tasks> listTasks();
     List<Tasks> getTodayTasks();
     List<Tasks> getAllTasks();
+    List<Tasks> getLimitTasks();
 }
