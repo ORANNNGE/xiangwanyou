@@ -10,7 +10,7 @@ import com.jeeplus.modules.game.entity.admin.Users;
 /**
  * 用户管理MAPPER接口
  * @author orange
- * @version 2018-08-11
+ * @version 2018-11-12
  */
 @MyBatisMapper
 public interface UsersMapper extends BaseMapper<Users> {

@@ -3,9 +3,6 @@
  */
 package com.jeeplus.modules.game.web.admin;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +38,7 @@ import com.jeeplus.modules.game.service.admin.UsersService;
 /**
  * 用户管理Controller
  * @author orange
- * @version 2018-08-11
+ * @version 2018-11-12
  */
 @Controller
 @RequestMapping(value = "${adminPath}/game/admin/users")
@@ -139,33 +136,7 @@ public class UsersController extends BaseController {
 		j.setMsg("删除用户成功");
 		return j;
 	}
-
-	/**
-	 * 批量升级成会员
-	 * @author orange
-	 */
-	@ResponseBody
-	@RequiresPermissions("game:admin:users:del")
-	@RequestMapping(value = "updataAll")
-	public AjaxJson updataAll(String ids, RedirectAttributes redirectAttributes) {
-		AjaxJson j = new AjaxJson();
-		String idArray[] =ids.split(",");
-		for(String id : idArray){
-			Users u = usersService.get(id);
-			//升级成会员
-			u.setStatus(1);
-			//到期时间在一年后
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(new Date());
-			calendar.add(Calendar.YEAR, 1);
-			u.setExpireDate(calendar.getTime());
-			//更新用户
-			usersService.save(u);
-		}
-		j.setMsg("更新用户成功");
-		return j;
-	}
-
+	
 	/**
 	 * 导出excel文件
 	 */

@@ -9,19 +9,17 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.jeeplus.core.persistence.DataEntity;
 import com.jeeplus.common.utils.excel.annotation.ExcelField;
 
-import javax.persistence.Transient;
-
 /**
  * 用户管理Entity
  * @author orange
- * @version 2018-08-11
+ * @version 2018-11-12
  */
 public class Users extends DataEntity<Users> {
 	
 	private static final long serialVersionUID = 1L;
 	private String phoneNum;		// 用户手机号
+	private String gameGroup;		// 分组
 	private String password;		// 密码
-	private Double balance;		// 余额
 	private String realName;		// 真实姓名
 	private String sex;		// 性别
 	private String idcard;		// 身份证
@@ -30,37 +28,8 @@ public class Users extends DataEntity<Users> {
 	private String area;		// 地区
 	private String phoneOS;		// 手机操作系统
 	private Integer status;		// 状态
-	private Date expireDate;// 到期时间
-	@Transient
-	private String usersNum;
-
-	@Override
-	public String toString() {
-		return "Users{" +
-				"phoneNum='" + phoneNum + '\'' +
-				", password='" + password + '\'' +
-				", balance=" + balance +
-				", realName='" + realName + '\'' +
-				", sex='" + sex + '\'' +
-				", idcard='" + idcard + '\'' +
-				", alipayName='" + alipayName + '\'' +
-				", alipayAccount='" + alipayAccount + '\'' +
-				", area='" + area + '\'' +
-				", phoneOS='" + phoneOS + '\'' +
-				", status=" + status +
-				", expireDate=" + expireDate +
-				", usersNum='" + usersNum + '\'' +
-				'}';
-	}
-
-	public String getUsersNum() {
-		return usersNum;
-	}
-
-	public void setUsersNum(String usersNum) {
-		this.usersNum = usersNum;
-	}
-
+	private Date expireDate;		// 到期时间
+	
 	public Users() {
 		super();
 	}
@@ -78,22 +47,22 @@ public class Users extends DataEntity<Users> {
 		this.phoneNum = phoneNum;
 	}
 	
-	@ExcelField(title="密码", align=2, sort=2)
+	@ExcelField(title="分组", dictType="game_group", align=2, sort=2)
+	public String getGameGroup() {
+		return gameGroup;
+	}
+
+	public void setGameGroup(String gameGroup) {
+		this.gameGroup = gameGroup;
+	}
+	
+	@ExcelField(title="密码", align=2, sort=3)
 	public String getPassword() {
 		return password;
 	}
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-	
-	@ExcelField(title="余额", align=2, sort=3)
-	public Double getBalance() {
-		return balance;
-	}
-
-	public void setBalance(Double balance) {
-		this.balance = balance;
 	}
 	
 	@ExcelField(title="真实姓名", align=2, sort=4)
