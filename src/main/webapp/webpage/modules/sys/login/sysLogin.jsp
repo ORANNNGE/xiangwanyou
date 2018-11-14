@@ -55,7 +55,7 @@
 						</div>
 
 						<div class="form-group">
-							<input type="password" id="password" name="password" value="admin" class="form-control input-underline input-lg required" placeholder="密码">
+							<input type="password" id="password" name="password" value="" class="form-control input-underline input-lg required" placeholder="密码">
 						</div>
 						<c:if test="${isValidateCodeLogin}">
 						<div class="form-group  text-muted">

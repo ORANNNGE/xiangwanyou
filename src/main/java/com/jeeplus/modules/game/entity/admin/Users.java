@@ -14,14 +14,15 @@ import javax.persistence.Transient;
 /**
  * 用户管理Entity
  * @author orange
- * @version 2018-08-11
+ * @version 2018-11-12
  */
 public class Users extends DataEntity<Users> {
-	
+
 	private static final long serialVersionUID = 1L;
 	private String phoneNum;		// 用户手机号
-	private String password;		// 密码
 	private Double balance;		// 余额
+	private String gameGroup;		// 分组
+	private String password;		// 密码
 	private String realName;		// 真实姓名
 	private String sex;		// 性别
 	private String idcard;		// 身份证
@@ -30,7 +31,7 @@ public class Users extends DataEntity<Users> {
 	private String area;		// 地区
 	private String phoneOS;		// 手机操作系统
 	private Integer status;		// 状态
-	private Date expireDate;// 到期时间
+	private Date expireDate;		// 到期时间
 	@Transient
 	private String usersNum;
 
@@ -38,8 +39,9 @@ public class Users extends DataEntity<Users> {
 	public String toString() {
 		return "Users{" +
 				"phoneNum='" + phoneNum + '\'' +
-				", password='" + password + '\'' +
 				", balance=" + balance +
+				", gameGroup='" + gameGroup + '\'' +
+				", password='" + password + '\'' +
 				", realName='" + realName + '\'' +
 				", sex='" + sex + '\'' +
 				", idcard='" + idcard + '\'' +
@@ -78,16 +80,7 @@ public class Users extends DataEntity<Users> {
 		this.phoneNum = phoneNum;
 	}
 	
-	@ExcelField(title="密码", align=2, sort=2)
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	
-	@ExcelField(title="余额", align=2, sort=3)
+	@ExcelField(title="余额", align=2, sort=2)
 	public Double getBalance() {
 		return balance;
 	}
@@ -96,7 +89,25 @@ public class Users extends DataEntity<Users> {
 		this.balance = balance;
 	}
 	
-	@ExcelField(title="真实姓名", align=2, sort=4)
+	@ExcelField(title="分组", dictType="game_group", align=2, sort=3)
+	public String getGameGroup() {
+		return gameGroup;
+	}
+
+	public void setGameGroup(String gameGroup) {
+		this.gameGroup = gameGroup;
+	}
+	
+	@ExcelField(title="密码", align=2, sort=4)
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
+	@ExcelField(title="真实姓名", align=2, sort=5)
 	public String getRealName() {
 		return realName;
 	}
@@ -105,7 +116,7 @@ public class Users extends DataEntity<Users> {
 		this.realName = realName;
 	}
 	
-	@ExcelField(title="性别", dictType="sex", align=2, sort=5)
+	@ExcelField(title="性别", dictType="sex", align=2, sort=6)
 	public String getSex() {
 		return sex;
 	}
@@ -114,7 +125,7 @@ public class Users extends DataEntity<Users> {
 		this.sex = sex;
 	}
 	
-	@ExcelField(title="身份证", align=2, sort=6)
+	@ExcelField(title="身份证", align=2, sort=7)
 	public String getIdcard() {
 		return idcard;
 	}
@@ -123,7 +134,7 @@ public class Users extends DataEntity<Users> {
 		this.idcard = idcard;
 	}
 	
-	@ExcelField(title="支付宝昵称", align=2, sort=7)
+	@ExcelField(title="支付宝昵称", align=2, sort=8)
 	public String getAlipayName() {
 		return alipayName;
 	}
@@ -132,7 +143,7 @@ public class Users extends DataEntity<Users> {
 		this.alipayName = alipayName;
 	}
 	
-	@ExcelField(title="支付宝账号", align=2, sort=8)
+	@ExcelField(title="支付宝账号", align=2, sort=9)
 	public String getAlipayAccount() {
 		return alipayAccount;
 	}
@@ -141,7 +152,7 @@ public class Users extends DataEntity<Users> {
 		this.alipayAccount = alipayAccount;
 	}
 	
-	@ExcelField(title="地区", align=2, sort=9)
+	@ExcelField(title="地区", align=2, sort=10)
 	public String getArea() {
 		return area;
 	}
@@ -150,7 +161,7 @@ public class Users extends DataEntity<Users> {
 		this.area = area;
 	}
 	
-	@ExcelField(title="手机操作系统", dictType="phone_os", align=2, sort=10)
+	@ExcelField(title="手机操作系统", dictType="phone_os", align=2, sort=11)
 	public String getPhoneOS() {
 		return phoneOS;
 	}
@@ -159,7 +170,7 @@ public class Users extends DataEntity<Users> {
 		this.phoneOS = phoneOS;
 	}
 	
-	@ExcelField(title="状态", dictType="user_status", align=2, sort=11)
+	@ExcelField(title="状态", dictType="user_status", align=2, sort=12)
 	public Integer getStatus() {
 		return status;
 	}
@@ -169,7 +180,7 @@ public class Users extends DataEntity<Users> {
 	}
 	
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	@ExcelField(title="到期时间", align=2, sort=12)
+	@ExcelField(title="到期时间", align=2, sort=13)
 	public Date getExpireDate() {
 		return expireDate;
 	}

@@ -137,6 +137,7 @@
 		select * FROM game_withdraw  where ${propertyName} = '${value}'
 	</select>
 
+	<!-- 根据用户id查询提现记录 -->
 	<select id="listWithdrawByUserId" resultType="Withdraw">
 		SELECT
 		<include refid="withdrawColumns"/>
@@ -145,4 +146,26 @@
 		where
 		users_id=#{usersId}
 	</select>
+
+	<!--批量更新-->
+	<update id="updatePatchPass">
+		update game_withdraw
+		set state = '2'
+		where id in
+		<foreach collection="list" index="index" open="(" separator="," close=")" item="item">
+			#{item}
+		</foreach>
+	</update>
+
+	<!--计算提现-->
+	<select id="getSumWithdraw" resultType="java.lang.Double">
+		select
+		sum(sum)
+		from game_withdraw
+		where id in
+		<foreach collection="list" index="index" open="(" separator="," close=")" item="item">
+			#{item}
+		</foreach>
+	</select>
+
 </mapper>

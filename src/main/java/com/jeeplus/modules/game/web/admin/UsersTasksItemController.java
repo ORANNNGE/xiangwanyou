@@ -151,14 +151,9 @@ public class UsersTasksItemController extends BaseController {
 		String idArray[] =ids.split(",");
 		List selectIds = new ArrayList();
 		for(String id : idArray){
-//			UsersTasksItem item = usersTasksItemService.get(id);
-//			if("3".equals(item.getState()) || "1".equals(item.getState()))
-//				continue;
-//			item.setState("3");
-//			usersTasksItemService.save(item);
 			selectIds.add(id);
 		}
-//		String selectIds = "("+ids+")";
+
 		usersTasksItemService.updateBatchPassItem(selectIds);
 		j.setMsg("更新用户任务成功");
 		return j;

@@ -32,6 +32,7 @@
 		<include refid="dictTypeJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
 			<if test="type != null and type != ''">
 				AND a.type LIKE 
 					<if test="dbName == 'oracle'">'%'||#{type}||'%'</if>

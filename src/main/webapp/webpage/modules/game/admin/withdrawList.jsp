@@ -68,7 +68,12 @@
 			</shiro:hasPermission>
 			<shiro:hasPermission name="game:admin:withdraw:del">
 				<button id="updateAll" class="btn btn-success" disabled onclick="updateAll()">
-					<i class="glyphicon glyphicon-edit"></i> 批量提现成功
+					<i class="glyphicon glyphicon-edit"></i> 批量提现
+				</button>
+			</shiro:hasPermission>
+			<shiro:hasPermission name="game:admin:withdraw:del">
+				<button id="sumAll" class="btn btn-success" disabled onclick="sumAll()">
+					<i class="glyphicon glyphicon-remove"></i> 计算提现
 				</button>
 			</shiro:hasPermission>
 			<shiro:hasPermission name="game:admin:withdraw:import">

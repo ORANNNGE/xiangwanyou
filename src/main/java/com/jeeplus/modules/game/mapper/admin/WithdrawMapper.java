@@ -17,4 +17,6 @@ import com.jeeplus.modules.game.entity.admin.Withdraw;
 @MyBatisMapper
 public interface WithdrawMapper extends BaseMapper<Withdraw> {
 	List<Withdraw> listWithdrawByUserId(String usersId);
+	void updatePatchPass(List ids);
+	Double getSumWithdraw(List ids);
 }

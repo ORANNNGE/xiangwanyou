@@ -5,14 +5,14 @@ package com.jeeplus.modules.game.mapper.admin;
 
 import com.jeeplus.core.persistence.BaseMapper;
 import com.jeeplus.core.persistence.annotation.MyBatisMapper;
-import com.jeeplus.modules.game.entity.admin.Users;
+import com.jeeplus.modules.game.entity.admin.TestTask;
 
 /**
- * 用户管理MAPPER接口
+ * 分组MAPPER接口
  * @author orange
- * @version 2018-11-12
+ * @version 2018-11-14
  */
 @MyBatisMapper
-public interface UsersMapper extends BaseMapper<Users> {
+public interface TestTaskMapper extends BaseMapper<TestTask> {
 	
 }

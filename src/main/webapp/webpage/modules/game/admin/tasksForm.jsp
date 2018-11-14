@@ -77,6 +77,12 @@
 					<td class="width-35">
 						<form:input path="phase" htmlEscape="false"    class="form-control "/>
 					</td>
+					<td class="width-15 active"><label class="pull-right">选择不可见的分组：</label></td>
+					<td class="width-35">
+						<sys:checkbox id="gameGroup" name="gameGroup" items="${fns:getDictList('game_group')}" values="${tasks.gameGroup}" cssClass="i-checks "/>
+					</td>
+				</tr>
+				<tr>
 					<td class="width-15 active"><label class="pull-right"><font color="red">*</font>任务详情：</label></td>
 					<td class="width-35">
                         <input type="hidden" name="details"/>
@@ -84,46 +90,42 @@
                           ${fns:unescapeHtml(tasks.details)}
                         </div>
 					</td>
-				</tr>
-				<tr>
 					<td class="width-15 active"><label class="pull-right">任务图标：</label></td>
 					<td class="width-35">
 						<form:hidden id="icon" path="icon" htmlEscape="false" maxlength="255" class="form-control"/>
 						<sys:ckfinder input="icon" type="files" uploadPath="/game/admin/tasks" selectMultiple="true"/>
 					</td>
+				</tr>
+				<tr>
 					<td class="width-15 active"><label class="pull-right"><font color="red">*</font>下载链接：</label></td>
 					<td class="width-35">
 						<form:input path="download" htmlEscape="false"    class="form-control required"/>
 					</td>
-				</tr>
-				<tr>
 					<td class="width-15 active"><label class="pull-right"><font color="red">*</font>可领任务总数量：</label></td>
 					<td class="width-35">
 						<form:input path="numTotal" htmlEscape="false"    class="form-control required"/>
 					</td>
+				</tr>
+				<tr>
 					<td class="width-15 active"><label class="pull-right"><font color="red">*</font>剩余任务数量：</label></td>
 					<td class="width-35">
 						<form:input path="numRemain" htmlEscape="false"    class="form-control required"/>
 					</td>
-				</tr>
-				<tr>
 					<td class="width-15 active"><label class="pull-right"><font color="red">*</font>奖励金：</label></td>
 					<td class="width-35">
 						<form:input path="reward" htmlEscape="false"    class="form-control required"/>
 					</td>
-					<%--<td class="width-15 active"><label class="pull-right">限时(小时)：</label></td>--%>
-					<%--<td class="width-35">--%>
-						<%--<form:input path="expireHours" htmlEscape="false"   max="240"  min="1" class="form-control  digits"/>--%>
-					<%--</td>--%>
 				</tr>
 				<tr>
+					<td class="width-15 active"><label class="pull-right">限时(小时)：</label></td>
+					<td class="width-35">
+						<form:input path="expireHours" htmlEscape="false"   max="240"  min="1" class="form-control  digits"/>
+					</td>
 					<td class="width-15 active"><label class="pull-right">备注信息：</label></td>
 					<td class="width-35">
 						<form:textarea path="remarks" htmlEscape="false" rows="4"    class="form-control "/>
 					</td>
-					<td class="width-15 active"></td>
-		   			<td class="width-35" ></td>
-		  		</tr>
+				</tr>
 		 	</tbody>
 		</table>
 	</form:form>

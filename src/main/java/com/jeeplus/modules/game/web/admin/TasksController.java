@@ -38,7 +38,7 @@ import com.jeeplus.modules.game.service.admin.TasksService;
 /**
  * 任务管理Controller
  * @author orange
- * @version 2018-10-10
+ * @version 2018-11-12
  */
 @Controller
 @RequestMapping(value = "${adminPath}/game/admin/tasks")

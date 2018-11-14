@@ -97,6 +97,21 @@ $(document).ready(function() {
 		        sortable: true
 		       
 		    }
+			,{
+		        field: 'gameGroup',
+		        title: '分组（不可见）',
+		        sortable: true,
+		        formatter:function(value, row , index){
+		        	if(!value) return;
+		        	var valueArray = value.split(",");
+		        	var labelArray = [];
+		        	for(var i =0 ; i<valueArray.length-1; i++){
+		        		labelArray[i] = jp.getDictLabel(${fns:toJson(fns:getDictList('game_group'))}, valueArray[i], "-");
+		        	}
+		        	return labelArray.join(",");
+		        }
+		       
+		    }
 		    ,{
 		        field: 'details',
 		        title: '任务详情',
@@ -149,12 +164,12 @@ $(document).ready(function() {
 		        sortable: true
 		       
 		    }
-			// ,{
-		    //     field: 'expireHours',
-		    //     title: '限时(小时)',
-		    //     sortable: true
-		    //
-		    // }
+			,{
+		        field: 'expireHours',
+		        title: '限时(小时)',
+		        sortable: true
+		       
+		    }
 			,{
 		        field: 'createDate',
 		        title: '创建时间',

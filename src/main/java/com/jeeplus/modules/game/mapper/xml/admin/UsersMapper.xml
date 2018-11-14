@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jeeplus.modules.game.mapper.admin.UsersMapper">
-
+    
 	<sql id="usersColumns">
 		a.id AS "id",
 		a.phone_num AS "phoneNum",
-		a.password AS "password",
 		a.balance AS "balance",
+		a.game_group AS "gameGroup",
+		a.password AS "password",
 		a.realname AS "realName",
 		a.sex AS "sex",
 		a.idcard AS "idcard",
@@ -23,22 +24,22 @@
 		a.remarks AS "remarks",
 		a.del_flag AS "delFlag"
 	</sql>
-
+	
 	<sql id="usersJoins">
-
+		
 	</sql>
-
-
+	
+    
 	<select id="get" resultType="Users" >
-		SELECT
+		SELECT 
 			<include refid="usersColumns"/>
 		FROM game_users a
 		<include refid="usersJoins"/>
 		WHERE a.id = #{id}
 	</select>
-
+	
 	<select id="findList" resultType="Users" >
-		SELECT
+		SELECT 
 			<include refid="usersColumns"/>
 		FROM game_users a
 		<include refid="usersJoins"/>
@@ -47,16 +48,15 @@
 			${dataScope}
 			<if test="phoneNum != null and phoneNum != ''">
 				AND a.phone_num = #{phoneNum}
-				<!--AND a.phone_num LIKE
-				<if test="dbName == 'oracle'">'%'||#{phoneNum}||'%'</if>
-				<if test="dbName == 'mssql'">'%'+#{phoneNum}+'%'</if>
-				<if test="dbName == 'mysql'">concat('%',#{phoneNum},'%')</if>-->
+			</if>
+			<if test="gameGroup != null and gameGroup != ''">
+				AND a.game_group = #{gameGroup}
 			</if>
 			<if test="realName != null and realName != ''">
-				AND a.realname LIKE
-				<if test="dbName == 'oracle'">'%'||#{realName}||'%'</if>
-				<if test="dbName == 'mssql'">'%'+#{realName}+'%'</if>
-				<if test="dbName == 'mysql'">concat('%',#{realName},'%')</if>
+				AND a.realname = #{realName}
+			</if>
+			<if test="status != null and status != ''">
+				AND a.status = #{status}
 			</if>
 		</where>
 		<choose>
@@ -68,16 +68,16 @@
 			</otherwise>
 		</choose>
 	</select>
-
+	
 	<select id="findAllList" resultType="Users" >
-		SELECT
+		SELECT 
 			<include refid="usersColumns"/>
 		FROM game_users a
 		<include refid="usersJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
 			${dataScope}
-		</where>
+		</where>		
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
 				ORDER BY ${page.orderBy}
@@ -87,13 +87,14 @@
 			</otherwise>
 		</choose>
 	</select>
-
+	
 	<insert id="insert">
 		INSERT INTO game_users(
 			id,
 			phone_num,
-			password,
 			balance,
+			game_group,
+			password,
 			realname,
 			sex,
 			idcard,
@@ -112,8 +113,9 @@
 		) VALUES (
 			#{id},
 			#{phoneNum},
-			#{password},
 			#{balance},
+			#{gameGroup},
+			#{password},
 			#{realName},
 			#{sex},
 			#{idcard},
@@ -131,12 +133,13 @@
 			#{delFlag}
 		)
 	</insert>
-
+	
 	<update id="update">
 		UPDATE game_users SET 	
 			phone_num = #{phoneNum},
-			password = #{password},
 			balance = #{balance},
+			game_group = #{gameGroup},
+			password = #{password},
 			realname = #{realName},
 			sex = #{sex},
 			idcard = #{idcard},
@@ -151,25 +154,25 @@
 			remarks = #{remarks}
 		WHERE id = #{id}
 	</update>
-
-
+	
+	
 	<!--物理删除-->
 	<update id="delete">
 		DELETE FROM game_users
 		WHERE id = #{id}
 	</update>
-
+	
 	<!--逻辑删除-->
 	<update id="deleteByLogic">
 		UPDATE game_users SET 
 			del_flag = #{DEL_FLAG_DELETE}
 		WHERE id = #{id}
 	</update>
-
-
+	
+	
 	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
 	<select id="findUniqueByProperty" resultType="Users" statementType="STATEMENT">
 		select * FROM game_users  where ${propertyName} = '${value}'
 	</select>
-
+	
 </mapper>

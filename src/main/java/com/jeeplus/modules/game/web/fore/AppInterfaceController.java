@@ -184,7 +184,7 @@ public class AppInterfaceController {
 	 */
 	@RequestMapping(value="index")
 	@ResponseBody
-	public AppResponse<Map<String, Object>> index(){
+	public AppResponse<Map<String, Object>> index( ){
 		//查询任务
 				System.out.println("---------------");
 				List<Tasks> tasks = tasksService.listTasks();

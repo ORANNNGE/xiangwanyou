@@ -5,6 +5,7 @@ package com.jeeplus.modules.game.web.admin;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -148,12 +149,29 @@ public class WithdrawController extends BaseController {
 	public AjaxJson updateAll(String ids, RedirectAttributes redirectAttributes) {
 		AjaxJson j = new AjaxJson();
 		String idArray[] =ids.split(",");
+		List selectIds = new ArrayList();
 		for(String id : idArray){
-			Withdraw withdraw = withdrawService.get(id);
-			withdraw.setState("2");
-			withdrawService.save(withdraw);
+			selectIds.add(id);
 		}
+		withdrawService.updatePatchPass(selectIds);
 		j.setMsg("用户提现成功");
+		return j;
+	}
+	/**
+	 * 计算提现金额
+	 */
+	@ResponseBody
+	@RequiresPermissions("game:admin:withdraw:del")
+	@RequestMapping(value = "sumAll")
+	public AjaxJson sumAll(String ids, RedirectAttributes redirectAttributes) {
+		AjaxJson j = new AjaxJson();
+		String idArray[] =ids.split(",");
+		List selectIds = new ArrayList();
+		for(String id : idArray){
+			selectIds.add(id);
+		}
+		 Double sum = withdrawService.getSumWithdraw(selectIds);
+		j.setMsg("总提现金额是：" + sum);
 		return j;
 	}
 	/**

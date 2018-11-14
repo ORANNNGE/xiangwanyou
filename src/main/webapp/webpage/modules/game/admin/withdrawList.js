@@ -142,6 +142,7 @@ $(document).ready(function() {
                 'check-all.bs.table uncheck-all.bs.table', function () {
             $('#remove').prop('disabled', ! $('#withdrawTable').bootstrapTable('getSelections').length);
           $('#updateAll').prop('disabled', ! $('#withdrawTable').bootstrapTable('getSelections').length);
+          $('#sumAll').prop('disabled', ! $('#withdrawTable').bootstrapTable('getSelections').length);
             $('#edit').prop('disabled', $('#withdrawTable').bootstrapTable('getSelections').length!=1);
         });
 		  
@@ -191,7 +192,7 @@ $(document).ready(function() {
             return row.id
         });
     }
-  
+
   function deleteAll(){
 
 		jp.confirm('确认要删除该用户提现记录吗？', function(){
@@ -207,6 +208,7 @@ $(document).ready(function() {
           	   
 		})
   }
+  	//批量更新提现状态
 	function updateAll(){
 
 		jp.confirm('确认要提现吗？', function(){
@@ -222,6 +224,20 @@ $(document).ready(function() {
 
 		})
 	}
+	//计算提现金额
+	function sumAll(){
+			// jp.confirm('确认要计算所选的提现吗？', function(){
+				jp.loading();
+				jp.get("${ctx}/game/admin/withdraw/sumAll?ids=" + getIdSelections(), function(data){
+					if(data.success){
+						$('#withdrawTable').bootstrapTable('refresh');
+						jp.alert(data.msg);
+					}else{
+						jp.error(data.msg);
+					}
+				})
+			// })
+		}
 
    function add(){
 	  jp.openDialog('新增用户提现', "${ctx}/game/admin/withdraw/form",'800px', '500px', $('#withdrawTable'));

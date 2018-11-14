@@ -7,6 +7,7 @@
 		a.name AS "name",
 		a.code AS "code",
 		a.phase AS "phase",
+		a.game_group AS "gameGroup",
 		a.details AS "details",
 		a.icon AS "icon",
 		a.download AS "download",
@@ -14,6 +15,7 @@
 		a.num_remain AS "numRemain",
 		a.reward AS "reward",
 		a.expire_hours AS "expireHours",
+		a.create_by AS "createBy.id",
 		a.create_date AS "createDate",
 		a.update_by AS "updateBy.id",
 		a.update_date AS "updateDate",
@@ -87,12 +89,14 @@
 			name,
 			code,
 			phase,
+			game_group,
 			details,
 			icon,
 			download,
 			num_total,
 			num_remain,
 			reward,
+			expire_hours,
 			create_by,
 			create_date,
 			update_by,
@@ -104,12 +108,14 @@
 			#{name},
 			#{code},
 			#{phase},
+			#{gameGroup},
 			#{details},
 			#{icon},
 			#{download},
 			#{numTotal},
 			#{numRemain},
 			#{reward},
+			#{expireHours},
 			#{createBy.id},
 			#{createDate},
 			#{updateBy.id},
@@ -124,12 +130,14 @@
 			name = #{name},
 			code = #{code},
 			phase = #{phase},
+			game_group = #{gameGroup},
 			details = #{details},
 			icon = #{icon},
 			download = #{download},
 			num_total = #{numTotal},
 			num_remain = #{numRemain},
 			reward = #{reward},
+			expire_hours = #{expireHours},
 			update_by = #{updateBy.id},
 			update_date = #{updateDate},
 			remarks = #{remarks}
@@ -192,6 +200,4 @@
 		TIMESTAMPDIFF(second,create_date,now())
 		between 0 and a.expire_hours*3600
 	</select>
-
-
 </mapper>
