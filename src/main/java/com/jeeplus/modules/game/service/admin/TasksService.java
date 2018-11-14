@@ -25,22 +25,41 @@ public class TasksService extends CrudService<TasksMapper, Tasks> {
 
 	@Autowired
 	TasksMapper mapper;
+	//移除属性
+	private List<Tasks> handleTasks(List<Tasks> data){
+		for (Tasks d : data) {
+			d.setIcon(d.getIcon().replace("|", ""));
+			d.setUpdateBy(null);
+			d.setCreateBy(null);
+			d.setDetails("");
+		}
+		return data;
+	}
 	public List<Tasks> listTasks(){
-		return mapper.listTasks();
+		List<Tasks> data = handleTasks(mapper.listTasks());
+		return data;
 	}
 
 	public List<Tasks> getAllTasks(){
-		return mapper.getAllTasks();
+		List<Tasks> data = handleTasks(mapper.getAllTasks());
+		return data;
+	}
+	public List<Tasks> getLimitTasks(){
+		List<Tasks> data = handleTasks(mapper.getLimitTasks());
+		return data;
 	}
 
 	public List<Tasks> getTodayTasks(){
-		return mapper.getTodayTasks();
+		List<Tasks> data = handleTasks(mapper.getTodayTasks());
+		return data;
 	}
+
 	public Tasks get(String id) {
 		return super.get(id);
 	}
 	
 	public List<Tasks> findList(Tasks tasks) {
+		List<Tasks> data = handleTasks(super.findList(tasks));
 		return super.findList(tasks);
 	}
 	

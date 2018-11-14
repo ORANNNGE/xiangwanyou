@@ -188,24 +188,16 @@ public class AppInterfaceController {
 		//查询任务
 				System.out.println("---------------");
 				List<Tasks> tasks = tasksService.listTasks();
-				List<Tasks> todayTasksList = tasksService.getTodayTasks();
-				for (Tasks tasks2 : tasks) {
-					//修改图片路径以匹配前端
-					tasks2.setIcon(tasks2.getIcon().substring(1, tasks2.getIcon().length()));
-				}
-				for (Tasks tasks2 : todayTasksList) {
-					//修改图片路径以匹配前端
-					tasks2.setIcon(tasks2.getIcon().substring(1, tasks2.getIcon().length()));
-				}
-				//任务统计
-//				List<TasksStat> stat = tasksStatService.selectStat();
-				//从配置文件sysConfig中获取任务统计的id
-				String tasksStatId = MyResourceUtil.getConfigByName("tasksStatId");
+				List<Tasks> todayTasksList = tasksService.getTodayTasks();			//今日任务
+
+				String tasksStatId = MyResourceUtil.getConfigByName("tasksStatId");	//从配置文件sysConfig中获取任务统计的id
 				TasksStat stat = new TasksStat();
 				stat.setId(tasksStatId);
-				List<TasksStat> statList = tasksStatService.findList(stat);
+				List<TasksStat> statList = tasksStatService.findList(stat);			//任务统计
 				Map<String, Object> map = new HashMap<>();
+				List<Tasks> limitTasksList = tasksService.getLimitTasks();			//限时任务
 				map.put("tasks", tasks);
+				map.put("limitTasksList", limitTasksList);
 				map.put("todayTasks", todayTasksList);
 				map.put("stat", statList);
 				return new AppResponse<>(1,"任务列表",map);
@@ -214,15 +206,8 @@ public class AppInterfaceController {
 	@RequestMapping(value="getAllTasks")
 	@ResponseBody
 	public AppResponse<Object> getAllTasks(Integer pageNum,Integer pageSize){
-//		Integer size = pageSize == null ? 10 : pageSize;
 		PageHelper.startPage(pageNum, pageSize);
-
 		List<Tasks> tasksList = tasksService.getAllTasks();
-
-		for (Tasks tasks : tasksList) {
-			tasks.setIcon(tasks.getIcon().substring(1, tasks.getIcon().length()));
-//			System.out.println(tasks.getDetails());
-		}
 		PageInfo page = new PageInfo(tasksList);
 		return new AppResponse<>(1,"",page);
 	}
@@ -230,29 +215,19 @@ public class AppInterfaceController {
 	@RequestMapping(value="getTodayTasks")
 	@ResponseBody
 	public AppResponse<Object> getTodayTasks(Integer pageNum,Integer pageSize){
-//		Integer size = pageSize == null ? 10 : pageSize;
 
 		PageHelper.startPage(pageNum, pageSize);
 		List<Tasks> tasksList = tasksService.getTodayTasks();
-		for (Tasks tasks : tasksList) {
-			tasks.setIcon(tasks.getIcon().substring(1, tasks.getIcon().length()));
-//			System.out.println(tasks.getDetails());
-		}
 		PageInfo page = new PageInfo(tasksList);
-
 		return new AppResponse<>(1,"",page);
 	}
 
 	@RequestMapping(value="getLimitTasks")
 	@ResponseBody
-	public AppResponse<List<Tasks>> getLimitTasks(){
-//		List<Tasks> tasksList = tasksService.getTodayTasks();
-//		for (Tasks tasks : tasksList) {
-//			tasks.setIcon(tasks.getIcon().substring(1, tasks.getIcon().length()));
-//			System.out.println(tasks.getDetails());
-//		}
-//		return new AppResponse<>(1,"",tasksList);
-		return null;
+	public AppResponse<List<Tasks>> getLimitTasks(Integer pageNum,Integer pageSize){
+		PageHelper.startPage(pageNum, pageSize);
+		List<Tasks> tasksList = tasksService.getLimitTasks();
+		return new AppResponse<>(1,"",tasksList);
 	}
 
 	@RequestMapping(value="logout")
