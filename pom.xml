@@ -815,7 +815,13 @@
             <artifactId>jsqlparser</artifactId>
             <version>0.9.1</version>
         </dependency>
+
         <!-- UTILS end -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
 </project>

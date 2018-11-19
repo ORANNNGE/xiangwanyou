@@ -2,7 +2,7 @@
 <%@ include file="/webpage/include/taglib.jsp"%>
 <html>
 <head>
-	<title>字典管理</title>
+	<title>分组管理</title>
 	<meta name="decorator" content="ani"/>
 	<%@ include file="/webpage/include/bootstraptable.jsp"%>
 	<%@ include file="foreDictList.js"%>
@@ -18,7 +18,7 @@
 	<div class="wrapper wrapper-content">
 	<div class="panel panel-primary">
 	<div class="panel-heading">
-		<h3 class="panel-title">字典列表</h3>
+		<h3 class="panel-title">分组管理</h3>
 	</div>
 	<div class="panel-body">
 	<div class="row">

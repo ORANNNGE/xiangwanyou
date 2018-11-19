@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.game.mapper.admin.PromoAwardMapper">
+    
+	<sql id="promoAwardColumns">
+		a.id AS "id",
+		a.users_id AS "users.id",
+		a.referrer AS "referrer.id",
+		a.award AS "award",
+		a.type AS "type",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+				
+		users.realname AS "users.realName",
+		users.phone_num AS "users.phoneNum",
+				
+		referrer.realname AS "referrer.realName",
+		referrer.phone_num AS "referrer.phoneNum"
+	</sql>
+	
+	<sql id="promoAwardJoins">
+		
+		LEFT JOIN game_users users ON users.id = a.users_id
+		LEFT JOIN game_users referrer ON referrer.id = a.referrer
+	</sql>
+	
+    
+	<select id="get" resultType="PromoAward" >
+		SELECT 
+			<include refid="promoAwardColumns"/>
+		FROM game_promo_award a
+		<include refid="promoAwardJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="PromoAward" >
+		SELECT 
+			<include refid="promoAwardColumns"/>
+		FROM game_promo_award a
+		<include refid="promoAwardJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+			<if test="users != null and users.id != null and users.id != ''">
+				AND a.users_id = #{users.id}
+			</if>
+			<if test="referrer != null and referrer.id != null and referrer.id != ''">
+				AND a.referrer = #{referrer.id}
+			</if>
+			<if test="award != null and award != ''">
+				AND a.award = #{award}
+			</if>
+			<if test="type != null and type != ''">
+				AND a.type = #{type}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="PromoAward" >
+		SELECT 
+			<include refid="promoAwardColumns"/>
+		FROM game_promo_award a
+		<include refid="promoAwardJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			${dataScope}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO game_promo_award(
+			id,
+			users_id,
+			referrer,
+			award,
+			type,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{users.id},
+			#{referrer.id},
+			#{award},
+			#{type},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE game_promo_award SET 	
+			users_id = #{users.id},
+			referrer = #{referrer.id},
+			award = #{award},
+			type = #{type},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM game_promo_award
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE game_promo_award SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="PromoAward" statementType="STATEMENT">
+		select * FROM game_promo_award  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>
