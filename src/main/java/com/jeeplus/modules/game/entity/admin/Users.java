@@ -3,6 +3,7 @@
  */
 package com.jeeplus.modules.game.entity.admin;
 
+import com.jeeplus.modules.game.entity.admin.Users;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -14,7 +15,7 @@ import javax.persistence.Transient;
 /**
  * 用户管理Entity
  * @author orange
- * @version 2018-11-12
+ * @version 2018-11-14
  */
 public class Users extends DataEntity<Users> {
 
@@ -24,6 +25,7 @@ public class Users extends DataEntity<Users> {
 	private String gameGroup;		// 分组
 	private String password;		// 密码
 	private String realName;		// 真实姓名
+	private Users referrer;		// 推荐人
 	private String sex;		// 性别
 	private String idcard;		// 身份证
 	private String alipayName;		// 支付宝昵称
@@ -34,25 +36,15 @@ public class Users extends DataEntity<Users> {
 	private Date expireDate;		// 到期时间
 	@Transient
 	private String usersNum;
+	@Transient
+	private String promoCode;
 
-	@Override
-	public String toString() {
-		return "Users{" +
-				"phoneNum='" + phoneNum + '\'' +
-				", balance=" + balance +
-				", gameGroup='" + gameGroup + '\'' +
-				", password='" + password + '\'' +
-				", realName='" + realName + '\'' +
-				", sex='" + sex + '\'' +
-				", idcard='" + idcard + '\'' +
-				", alipayName='" + alipayName + '\'' +
-				", alipayAccount='" + alipayAccount + '\'' +
-				", area='" + area + '\'' +
-				", phoneOS='" + phoneOS + '\'' +
-				", status=" + status +
-				", expireDate=" + expireDate +
-				", usersNum='" + usersNum + '\'' +
-				'}';
+	public String getPromoCode() {
+		return promoCode;
+	}
+
+	public void setPromoCode(String promoCode) {
+		this.promoCode = promoCode;
 	}
 
 	public String getUsersNum() {
@@ -79,7 +71,7 @@ public class Users extends DataEntity<Users> {
 	public void setPhoneNum(String phoneNum) {
 		this.phoneNum = phoneNum;
 	}
-	
+
 	@ExcelField(title="余额", align=2, sort=2)
 	public Double getBalance() {
 		return balance;
@@ -88,7 +80,7 @@ public class Users extends DataEntity<Users> {
 	public void setBalance(Double balance) {
 		this.balance = balance;
 	}
-	
+
 	@ExcelField(title="分组", dictType="game_group", align=2, sort=3)
 	public String getGameGroup() {
 		return gameGroup;
@@ -97,7 +89,7 @@ public class Users extends DataEntity<Users> {
 	public void setGameGroup(String gameGroup) {
 		this.gameGroup = gameGroup;
 	}
-	
+
 	@ExcelField(title="密码", align=2, sort=4)
 	public String getPassword() {
 		return password;
@@ -106,7 +98,7 @@ public class Users extends DataEntity<Users> {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 	@ExcelField(title="真实姓名", align=2, sort=5)
 	public String getRealName() {
 		return realName;
@@ -115,8 +107,17 @@ public class Users extends DataEntity<Users> {
 	public void setRealName(String realName) {
 		this.realName = realName;
 	}
-	
-	@ExcelField(title="性别", dictType="sex", align=2, sort=6)
+
+	@ExcelField(title="推荐人", fieldType=Users.class, value="referrer.name", align=2, sort=6)
+	public Users getReferrer() {
+		return referrer;
+	}
+
+	public void setReferrer(Users referrer) {
+		this.referrer = referrer;
+	}
+
+	@ExcelField(title="性别", dictType="sex", align=2, sort=7)
 	public String getSex() {
 		return sex;
 	}
@@ -124,8 +125,8 @@ public class Users extends DataEntity<Users> {
 	public void setSex(String sex) {
 		this.sex = sex;
 	}
-	
-	@ExcelField(title="身份证", align=2, sort=7)
+
+	@ExcelField(title="身份证", align=2, sort=8)
 	public String getIdcard() {
 		return idcard;
 	}
@@ -133,8 +134,8 @@ public class Users extends DataEntity<Users> {
 	public void setIdcard(String idcard) {
 		this.idcard = idcard;
 	}
-	
-	@ExcelField(title="支付宝昵称", align=2, sort=8)
+
+	@ExcelField(title="支付宝昵称", align=2, sort=9)
 	public String getAlipayName() {
 		return alipayName;
 	}
@@ -142,8 +143,8 @@ public class Users extends DataEntity<Users> {
 	public void setAlipayName(String alipayName) {
 		this.alipayName = alipayName;
 	}
-	
-	@ExcelField(title="支付宝账号", align=2, sort=9)
+
+	@ExcelField(title="支付宝账号", align=2, sort=10)
 	public String getAlipayAccount() {
 		return alipayAccount;
 	}
@@ -151,8 +152,8 @@ public class Users extends DataEntity<Users> {
 	public void setAlipayAccount(String alipayAccount) {
 		this.alipayAccount = alipayAccount;
 	}
-	
-	@ExcelField(title="地区", align=2, sort=10)
+
+	@ExcelField(title="地区", align=2, sort=11)
 	public String getArea() {
 		return area;
 	}
@@ -160,8 +161,8 @@ public class Users extends DataEntity<Users> {
 	public void setArea(String area) {
 		this.area = area;
 	}
-	
-	@ExcelField(title="手机操作系统", dictType="phone_os", align=2, sort=11)
+
+	@ExcelField(title="手机操作系统", dictType="phone_os", align=2, sort=12)
 	public String getPhoneOS() {
 		return phoneOS;
 	}
@@ -169,8 +170,8 @@ public class Users extends DataEntity<Users> {
 	public void setPhoneOS(String phoneOS) {
 		this.phoneOS = phoneOS;
 	}
-	
-	@ExcelField(title="状态", dictType="user_status", align=2, sort=12)
+
+	@ExcelField(title="状态", dictType="user_status", align=2, sort=13)
 	public Integer getStatus() {
 		return status;
 	}
@@ -178,9 +179,9 @@ public class Users extends DataEntity<Users> {
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
-	
+
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-	@ExcelField(title="到期时间", align=2, sort=13)
+	@ExcelField(title="到期时间", align=2, sort=14)
 	public Date getExpireDate() {
 		return expireDate;
 	}
@@ -188,5 +189,5 @@ public class Users extends DataEntity<Users> {
 	public void setExpireDate(Date expireDate) {
 		this.expireDate = expireDate;
 	}
-	
+
 }

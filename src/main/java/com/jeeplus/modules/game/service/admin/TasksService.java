@@ -35,22 +35,22 @@ public class TasksService extends CrudService<TasksMapper, Tasks> {
 		}
 		return data;
 	}
-	public List<Tasks> listTasks(){
-		List<Tasks> data = handleTasks(mapper.listTasks());
+	public List<Tasks> listTasks(String gameGroup){
+		List<Tasks> data = handleTasks(mapper.listTasks(gameGroup));
 		return data;
 	}
 
-	public List<Tasks> getAllTasks(){
-		List<Tasks> data = handleTasks(mapper.getAllTasks());
+	public List<Tasks> getAllTasks(String gameGroup){
+		List<Tasks> data = handleTasks(mapper.getAllTasks(gameGroup));
 		return data;
 	}
-	public List<Tasks> getLimitTasks(){
-		List<Tasks> data = handleTasks(mapper.getLimitTasks());
+	public List<Tasks> getLimitTasks(String gameGroup){
+		List<Tasks> data = handleTasks(mapper.getLimitTasks(gameGroup));
 		return data;
 	}
 
-	public List<Tasks> getTodayTasks(){
-		List<Tasks> data = handleTasks(mapper.getTodayTasks());
+	public List<Tasks> getTodayTasks(String gameGroup){
+		List<Tasks> data = handleTasks(mapper.getTodayTasks(gameGroup));
 		return data;
 	}
 

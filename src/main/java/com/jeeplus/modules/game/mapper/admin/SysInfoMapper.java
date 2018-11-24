@@ -3,17 +3,16 @@
  */
 package com.jeeplus.modules.game.mapper.admin;
 
-import java.util.List;
-
 import com.jeeplus.core.persistence.BaseMapper;
 import com.jeeplus.core.persistence.annotation.MyBatisMapper;
-import com.jeeplus.modules.game.entity.admin.Notice;
+import com.jeeplus.modules.game.entity.admin.SysInfo;
 
 /**
- * 公告管理MAPPER接口
+ * 系统通知MAPPER接口
  * @author orange
- * @version 2018-08-06
+ * @version 2018-11-20
  */
 @MyBatisMapper
-public interface NoticeMapper extends BaseMapper<Notice> {
+public interface SysInfoMapper extends BaseMapper<SysInfo> {
+	
 }

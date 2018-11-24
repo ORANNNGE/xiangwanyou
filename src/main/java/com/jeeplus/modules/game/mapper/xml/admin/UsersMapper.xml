@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jeeplus.modules.game.mapper.admin.UsersMapper">
-    
+
 	<sql id="usersColumns">
 		a.id AS "id",
 		a.phone_num AS "phoneNum",
@@ -9,6 +9,7 @@
 		a.game_group AS "gameGroup",
 		a.password AS "password",
 		a.realname AS "realName",
+		a.referrer AS "referrer.id",
 		a.sex AS "sex",
 		a.idcard AS "idcard",
 		a.alipay_name AS "alipayName",
@@ -22,25 +23,28 @@
 		a.update_by AS "updateBy.id",
 		a.update_date AS "updateDate",
 		a.remarks AS "remarks",
-		a.del_flag AS "delFlag"
+		a.del_flag AS "delFlag",
+
+		referrer.realname AS "referrer.realName"
 	</sql>
-	
+
 	<sql id="usersJoins">
-		
+
+		LEFT JOIN game_users referrer ON referrer.id = a.referrer
 	</sql>
-	
-    
+
+
 	<select id="get" resultType="Users" >
-		SELECT 
-			<include refid="usersColumns"/>
+		SELECT
+		<include refid="usersColumns"/>
 		FROM game_users a
 		<include refid="usersJoins"/>
 		WHERE a.id = #{id}
 	</select>
-	
+
 	<select id="findList" resultType="Users" >
-		SELECT 
-			<include refid="usersColumns"/>
+		SELECT
+		<include refid="usersColumns"/>
 		FROM game_users a
 		<include refid="usersJoins"/>
 		<where>
@@ -68,16 +72,16 @@
 			</otherwise>
 		</choose>
 	</select>
-	
+
 	<select id="findAllList" resultType="Users" >
-		SELECT 
-			<include refid="usersColumns"/>
+		SELECT
+		<include refid="usersColumns"/>
 		FROM game_users a
 		<include refid="usersJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
 			${dataScope}
-		</where>		
+		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
 				ORDER BY ${page.orderBy}
@@ -87,7 +91,7 @@
 			</otherwise>
 		</choose>
 	</select>
-	
+
 	<insert id="insert">
 		INSERT INTO game_users(
 			id,
@@ -96,6 +100,7 @@
 			game_group,
 			password,
 			realname,
+			referrer,
 			sex,
 			idcard,
 			alipay_name,
@@ -117,6 +122,7 @@
 			#{gameGroup},
 			#{password},
 			#{realName},
+			#{referrer.id},
 			#{sex},
 			#{idcard},
 			#{alipayName},
@@ -133,14 +139,15 @@
 			#{delFlag}
 		)
 	</insert>
-	
+
 	<update id="update">
-		UPDATE game_users SET 	
+		UPDATE game_users SET
 			phone_num = #{phoneNum},
 			balance = #{balance},
 			game_group = #{gameGroup},
 			password = #{password},
 			realname = #{realName},
+			referrer = #{referrer.id},
 			sex = #{sex},
 			idcard = #{idcard},
 			alipay_name = #{alipayName},
@@ -154,25 +161,25 @@
 			remarks = #{remarks}
 		WHERE id = #{id}
 	</update>
-	
-	
+
+
 	<!--物理删除-->
 	<update id="delete">
 		DELETE FROM game_users
 		WHERE id = #{id}
 	</update>
-	
+
 	<!--逻辑删除-->
 	<update id="deleteByLogic">
 		UPDATE game_users SET 
 			del_flag = #{DEL_FLAG_DELETE}
 		WHERE id = #{id}
 	</update>
-	
-	
+
+
 	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
 	<select id="findUniqueByProperty" resultType="Users" statementType="STATEMENT">
 		select * FROM game_users  where ${propertyName} = '${value}'
 	</select>
-	
+
 </mapper>

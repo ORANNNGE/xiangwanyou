@@ -3,6 +3,8 @@
  */
 package com.jeeplus.modules.game.web.admin;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 import java.util.Map;
 
@@ -32,108 +34,108 @@ import com.jeeplus.core.web.BaseController;
 import com.jeeplus.common.utils.StringUtils;
 import com.jeeplus.common.utils.excel.ExportExcel;
 import com.jeeplus.common.utils.excel.ImportExcel;
-import com.jeeplus.modules.game.entity.admin.Notice;
-import com.jeeplus.modules.game.service.admin.NoticeService;
+import com.jeeplus.modules.game.entity.admin.SysInfo;
+import com.jeeplus.modules.game.service.admin.SysInfoService;
 
 /**
- * 公告管理Controller
+ * 系统通知Controller
  * @author orange
- * @version 2018-11-19
+ * @version 2018-11-20
  */
 @Controller
-@RequestMapping(value = "${adminPath}/game/admin/notice")
-public class NoticeController extends BaseController {
+@RequestMapping(value = "${adminPath}/game/admin/sysInfo")
+public class SysInfoController extends BaseController {
 
 	@Autowired
-	private NoticeService noticeService;
+	private SysInfoService sysInfoService;
 	
 	@ModelAttribute
-	public Notice get(@RequestParam(required=false) String id) {
-		Notice entity = null;
+	public SysInfo get(@RequestParam(required=false) String id) {
+		SysInfo entity = null;
 		if (StringUtils.isNotBlank(id)){
-			entity = noticeService.get(id);
+			entity = sysInfoService.get(id);
 		}
 		if (entity == null){
-			entity = new Notice();
+			entity = new SysInfo();
 		}
 		return entity;
 	}
 	
 	/**
-	 * 公告列表页面
+	 * 系统通知列表页面
 	 */
-	@RequiresPermissions("game:admin:notice:list")
+	@RequiresPermissions("game:admin:sysInfo:list")
 	@RequestMapping(value = {"list", ""})
 	public String list() {
-		return "modules/game/admin/noticeList";
+		return "modules/game/admin/sysInfoList";
 	}
 	
 		/**
-	 * 公告列表数据
+	 * 系统通知列表数据
 	 */
 	@ResponseBody
-	@RequiresPermissions("game:admin:notice:list")
+	@RequiresPermissions("game:admin:sysInfo:list")
 	@RequestMapping(value = "data")
-	public Map<String, Object> data(Notice notice, HttpServletRequest request, HttpServletResponse response, Model model) {
-		Page<Notice> page = noticeService.findPage(new Page<Notice>(request, response), notice); 
+	public Map<String, Object> data(SysInfo sysInfo, HttpServletRequest request, HttpServletResponse response, Model model) {
+		Page<SysInfo> page = sysInfoService.findPage(new Page<SysInfo>(request, response), sysInfo); 
 		return getBootstrapData(page);
 	}
 
 	/**
-	 * 查看，增加，编辑公告表单页面
+	 * 查看，增加，编辑系统通知表单页面
 	 */
-	@RequiresPermissions(value={"game:admin:notice:view","game:admin:notice:add","game:admin:notice:edit"},logical=Logical.OR)
+	@RequiresPermissions(value={"game:admin:sysInfo:view","game:admin:sysInfo:add","game:admin:sysInfo:edit"},logical=Logical.OR)
 	@RequestMapping(value = "form")
-	public String form(Notice notice, Model model) {
-		model.addAttribute("notice", notice);
-		return "modules/game/admin/noticeForm";
+	public String form(SysInfo sysInfo, Model model) {
+		model.addAttribute("sysInfo", sysInfo);
+		return "modules/game/admin/sysInfoForm";
 	}
 
 	/**
-	 * 保存公告
+	 * 保存系统通知
 	 */
 	@ResponseBody
-	@RequiresPermissions(value={"game:admin:notice:add","game:admin:notice:edit"},logical=Logical.OR)
+	@RequiresPermissions(value={"game:admin:sysInfo:add","game:admin:sysInfo:edit"},logical=Logical.OR)
 	@RequestMapping(value = "save")
-	public AjaxJson save(Notice notice, Model model, RedirectAttributes redirectAttributes) throws Exception{
+	public AjaxJson save(SysInfo sysInfo, Model model, RedirectAttributes redirectAttributes) throws Exception{
 		AjaxJson j = new AjaxJson();
-		if (!beanValidator(model, notice)){
+		if (!beanValidator(model, sysInfo)){
 			j.setSuccess(false);
 			j.setMsg("非法参数！");
 			return j;
 		}
-		noticeService.save(notice);//新建或者编辑保存
+		sysInfoService.save(sysInfo);//新建或者编辑保存
 		j.setSuccess(true);
-		j.setMsg("保存公告成功");
+		j.setMsg("保存系统通知成功");
 		return j;
 	}
 	
 	/**
-	 * 删除公告
+	 * 删除系统通知
 	 */
 	@ResponseBody
-	@RequiresPermissions("game:admin:notice:del")
+	@RequiresPermissions("game:admin:sysInfo:del")
 	@RequestMapping(value = "delete")
-	public AjaxJson delete(Notice notice, RedirectAttributes redirectAttributes) {
+	public AjaxJson delete(SysInfo sysInfo, RedirectAttributes redirectAttributes) {
 		AjaxJson j = new AjaxJson();
-		noticeService.delete(notice);
-		j.setMsg("删除公告成功");
+		sysInfoService.delete(sysInfo);
+		j.setMsg("删除系统通知成功");
 		return j;
 	}
 	
 	/**
-	 * 批量删除公告
+	 * 批量删除系统通知
 	 */
 	@ResponseBody
-	@RequiresPermissions("game:admin:notice:del")
+	@RequiresPermissions("game:admin:sysInfo:del")
 	@RequestMapping(value = "deleteAll")
 	public AjaxJson deleteAll(String ids, RedirectAttributes redirectAttributes) {
 		AjaxJson j = new AjaxJson();
 		String idArray[] =ids.split(",");
 		for(String id : idArray){
-			noticeService.delete(noticeService.get(id));
+			sysInfoService.delete(sysInfoService.get(id));
 		}
-		j.setMsg("删除公告成功");
+		j.setMsg("删除系统通知成功");
 		return j;
 	}
 	
@@ -141,20 +143,20 @@ public class NoticeController extends BaseController {
 	 * 导出excel文件
 	 */
 	@ResponseBody
-	@RequiresPermissions("game:admin:notice:export")
+	@RequiresPermissions("game:admin:sysInfo:export")
     @RequestMapping(value = "export", method=RequestMethod.POST)
-    public AjaxJson exportFile(Notice notice, HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes) {
+    public AjaxJson exportFile(SysInfo sysInfo, HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes) {
 		AjaxJson j = new AjaxJson();
 		try {
-            String fileName = "公告"+DateUtils.getDate("yyyyMMddHHmmss")+".xlsx";
-            Page<Notice> page = noticeService.findPage(new Page<Notice>(request, response, -1), notice);
-    		new ExportExcel("公告", Notice.class).setDataList(page.getList()).write(response, fileName).dispose();
+            String fileName = "系统通知"+DateUtils.getDate("yyyyMMddHHmmss")+".xlsx";
+            Page<SysInfo> page = sysInfoService.findPage(new Page<SysInfo>(request, response, -1), sysInfo);
+    		new ExportExcel("系统通知", SysInfo.class).setDataList(page.getList()).write(response, fileName).dispose();
     		j.setSuccess(true);
     		j.setMsg("导出成功！");
     		return j;
 		} catch (Exception e) {
 			j.setSuccess(false);
-			j.setMsg("导出公告记录失败！失败信息："+e.getMessage());
+			j.setMsg("导出系统通知记录失败！失败信息："+e.getMessage());
 		}
 			return j;
     }
@@ -163,7 +165,7 @@ public class NoticeController extends BaseController {
 	 * 导入Excel数据
 
 	 */
-	@RequiresPermissions("game:admin:notice:import")
+	@RequiresPermissions("game:admin:sysInfo:import")
     @RequestMapping(value = "import", method=RequestMethod.POST)
     public String importFile(MultipartFile file, RedirectAttributes redirectAttributes) {
 		try {
@@ -171,10 +173,10 @@ public class NoticeController extends BaseController {
 			int failureNum = 0;
 			StringBuilder failureMsg = new StringBuilder();
 			ImportExcel ei = new ImportExcel(file, 1, 0);
-			List<Notice> list = ei.getDataList(Notice.class);
-			for (Notice notice : list){
+			List<SysInfo> list = ei.getDataList(SysInfo.class);
+			for (SysInfo sysInfo : list){
 				try{
-					noticeService.save(notice);
+					sysInfoService.save(sysInfo);
 					successNum++;
 				}catch(ConstraintViolationException ex){
 					failureNum++;
@@ -183,30 +185,30 @@ public class NoticeController extends BaseController {
 				}
 			}
 			if (failureNum>0){
-				failureMsg.insert(0, "，失败 "+failureNum+" 条公告记录。");
+				failureMsg.insert(0, "，失败 "+failureNum+" 条系统通知记录。");
 			}
-			addMessage(redirectAttributes, "已成功导入 "+successNum+" 条公告记录"+failureMsg);
+			addMessage(redirectAttributes, "已成功导入 "+successNum+" 条系统通知记录"+failureMsg);
 		} catch (Exception e) {
-			addMessage(redirectAttributes, "导入公告失败！失败信息："+e.getMessage());
+			addMessage(redirectAttributes, "导入系统通知失败！失败信息："+e.getMessage());
 		}
-		return "redirect:"+Global.getAdminPath()+"/game/admin/notice/?repage";
+		return "redirect:"+Global.getAdminPath()+"/game/admin/sysInfo/?repage";
     }
 	
 	/**
-	 * 下载导入公告数据模板
+	 * 下载导入系统通知数据模板
 	 */
-	@RequiresPermissions("game:admin:notice:import")
+	@RequiresPermissions("game:admin:sysInfo:import")
     @RequestMapping(value = "import/template")
     public String importFileTemplate(HttpServletResponse response, RedirectAttributes redirectAttributes) {
 		try {
-            String fileName = "公告数据导入模板.xlsx";
-    		List<Notice> list = Lists.newArrayList(); 
-    		new ExportExcel("公告数据", Notice.class, 1).setDataList(list).write(response, fileName).dispose();
+            String fileName = "系统通知数据导入模板.xlsx";
+    		List<SysInfo> list = Lists.newArrayList(); 
+    		new ExportExcel("系统通知数据", SysInfo.class, 1).setDataList(list).write(response, fileName).dispose();
     		return null;
 		} catch (Exception e) {
 			addMessage(redirectAttributes, "导入模板下载失败！失败信息："+e.getMessage());
 		}
-		return "redirect:"+Global.getAdminPath()+"/game/admin/notice/?repage";
+		return "redirect:"+Global.getAdminPath()+"/game/admin/sysInfo/?repage";
     }
 
 }

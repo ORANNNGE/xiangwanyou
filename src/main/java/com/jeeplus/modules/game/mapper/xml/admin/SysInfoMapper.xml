@@ -1,40 +1,50 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jeeplus.modules.game.mapper.admin.NoticeMapper">
+<mapper namespace="com.jeeplus.modules.game.mapper.admin.SysInfoMapper">
     
-	<sql id="noticeColumns">
+	<sql id="sysInfoColumns">
 		a.id AS "id",
 		a.name AS "name",
-		a.picture AS "picture",
+		a.content AS "content",
+		a.users_id AS "users.id",
 		a.create_by AS "createBy.id",
 		a.create_date AS "createDate",
 		a.update_by AS "updateBy.id",
 		a.update_date AS "updateDate",
 		a.remarks AS "remarks",
-		a.del_flag AS "delFlag"
+		a.del_flag AS "delFlag",
+				
+				
+				
+		users.realname AS "users.realName",
+		users.phone_num AS "users.phoneNum"
 	</sql>
 	
-	<sql id="noticeJoins">
+	<sql id="sysInfoJoins">
 		
+		LEFT JOIN game_users users ON users.id = a.users_id
 	</sql>
 	
     
-	<select id="get" resultType="Notice" >
+	<select id="get" resultType="SysInfo" >
 		SELECT 
-			<include refid="noticeColumns"/>
-		FROM game_notice a
-		<include refid="noticeJoins"/>
+			<include refid="sysInfoColumns"/>
+		FROM game_sys_info a
+		<include refid="sysInfoJoins"/>
 		WHERE a.id = #{id}
 	</select>
 	
-	<select id="findList" resultType="Notice" >
+	<select id="findList" resultType="SysInfo" >
 		SELECT 
-			<include refid="noticeColumns"/>
-		FROM game_notice a
-		<include refid="noticeJoins"/>
+			<include refid="sysInfoColumns"/>
+		FROM game_sys_info a
+		<include refid="sysInfoJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
 			${dataScope}
+			<if test="users != null and users.id != null and users.id != ''">
+				AND a.users_id = #{users.id}
+			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
@@ -46,11 +56,11 @@
 		</choose>
 	</select>
 	
-	<select id="findAllList" resultType="Notice" >
+	<select id="findAllList" resultType="SysInfo" >
 		SELECT 
-			<include refid="noticeColumns"/>
-		FROM game_notice a
-		<include refid="noticeJoins"/>
+			<include refid="sysInfoColumns"/>
+		FROM game_sys_info a
+		<include refid="sysInfoJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
 			${dataScope}
@@ -66,10 +76,11 @@
 	</select>
 	
 	<insert id="insert">
-		INSERT INTO game_notice(
+		INSERT INTO game_sys_info(
 			id,
 			name,
-			picture,
+			content,
+			users_id,
 			create_by,
 			create_date,
 			update_by,
@@ -79,7 +90,8 @@
 		) VALUES (
 			#{id},
 			#{name},
-			#{picture},
+			#{content},
+			#{users.id},
 			#{createBy.id},
 			#{createDate},
 			#{updateBy.id},
@@ -90,9 +102,10 @@
 	</insert>
 	
 	<update id="update">
-		UPDATE game_notice SET 	
+		UPDATE game_sys_info SET 	
 			name = #{name},
-			picture = #{picture},
+			content = #{content},
+			users_id = #{users.id},
 			update_by = #{updateBy.id},
 			update_date = #{updateDate},
 			remarks = #{remarks}
@@ -102,21 +115,21 @@
 	
 	<!--物理删除-->
 	<update id="delete">
-		DELETE FROM game_notice
+		DELETE FROM game_sys_info
 		WHERE id = #{id}
 	</update>
 	
 	<!--逻辑删除-->
 	<update id="deleteByLogic">
-		UPDATE game_notice SET 
+		UPDATE game_sys_info SET 
 			del_flag = #{DEL_FLAG_DELETE}
 		WHERE id = #{id}
 	</update>
 	
 	
 	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
-	<select id="findUniqueByProperty" resultType="Notice" statementType="STATEMENT">
-		select * FROM game_notice  where ${propertyName} = '${value}'
+	<select id="findUniqueByProperty" resultType="SysInfo" statementType="STATEMENT">
+		select * FROM game_sys_info  where ${propertyName} = '${value}'
 	</select>
 	
 </mapper>

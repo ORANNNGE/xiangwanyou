@@ -6,6 +6,7 @@ package com.jeeplus.modules.game.mapper.admin;
 import com.jeeplus.core.persistence.BaseMapper;
 import com.jeeplus.core.persistence.annotation.MyBatisMapper;
 import com.jeeplus.modules.game.entity.admin.Tasks;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -16,8 +17,8 @@ import java.util.List;
  */
 @MyBatisMapper
 public interface TasksMapper extends BaseMapper<Tasks> {
-    List<Tasks> listTasks();
-    List<Tasks> getTodayTasks();
-    List<Tasks> getAllTasks();
-    List<Tasks> getLimitTasks();
+    List<Tasks> listTasks(@Param(value = "gameGroup") String gameGroup);
+    List<Tasks> getTodayTasks(@Param(value = "gameGroup") String gameGroup);
+    List<Tasks> getAllTasks(@Param(value = "gameGroup") String gameGroup);
+    List<Tasks> getLimitTasks(@Param(value = "gameGroup") String gameGroup);
 }

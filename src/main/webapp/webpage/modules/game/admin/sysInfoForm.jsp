@@ -2,7 +2,7 @@
 <%@ include file="/webpage/include/taglib.jsp"%>
 <html>
 <head>
-	<title>公告管理</title>
+	<title>系统通知管理</title>
 	<meta name="decorator" content="ani"/>
 	<script type="text/javascript">
 		var validateForm;
@@ -23,7 +23,7 @@
 		$(document).ready(function() {
 			validateForm = $("#inputForm").validate({
 				submitHandler: function(form){
-					jp.post("${ctx}/game/admin/notice/save",$('#inputForm').serialize(),function(data){
+					jp.post("${ctx}/game/admin/sysInfo/save",$('#inputForm').serialize(),function(data){
 						if(data.success){
 	                    	$table.bootstrapTable('refresh');
 	                    	jp.success(data.msg);
@@ -49,23 +49,27 @@
 	</script>
 </head>
 <body class="bg-white">
-		<form:form id="inputForm" modelAttribute="notice" class="form-horizontal">
+		<form:form id="inputForm" modelAttribute="sysInfo" class="form-horizontal">
 		<form:hidden path="id"/>
 		<sys:message content="${message}"/>	
 		<table class="table table-bordered">
 		   <tbody>
 				<tr>
-					<td class="width-15 active"><label class="pull-right">公告：</label></td>
+					<td class="width-15 active"><label class="pull-right">标题：</label></td>
 					<td class="width-35">
 						<form:input path="name" htmlEscape="false"    class="form-control "/>
 					</td>
-					<td class="width-15 active"><label class="pull-right">公告图片：</label></td>
+					<td class="width-15 active"><label class="pull-right">消息：</label></td>
 					<td class="width-35">
-						<form:hidden id="picture" path="picture" htmlEscape="false" maxlength="255" class="form-control"/>
-						<sys:ckfinder input="picture" type="files" uploadPath="/game/admin/notice" selectMultiple="true"/>
+						<form:textarea path="content" htmlEscape="false" rows="4"    class="form-control "/>
 					</td>
 				</tr>
 				<tr>
+					<td class="width-15 active"><label class="pull-right">用户：</label></td>
+					<td class="width-35">
+						<sys:gridselect url="${ctx}/game/admin/users/data" id="users" name="users.id" value="${sysInfo.users.id}" labelName="users.realName" labelValue="${sysInfo.users.realName}"
+							 title="选择用户" cssClass="form-control required" fieldLabels="姓名|手机号" fieldKeys="realName|phoneNum" searchLabels="姓名|手机号" searchKeys="realName|phoneNum" ></sys:gridselect>
+					</td>
 					<td class="width-15 active"><label class="pull-right">备注信息：</label></td>
 					<td class="width-35">
 						<form:textarea path="remarks" htmlEscape="false" rows="4"    class="form-control "/>

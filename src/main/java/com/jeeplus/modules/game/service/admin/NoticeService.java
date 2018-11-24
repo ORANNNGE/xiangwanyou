@@ -24,9 +24,6 @@ import com.jeeplus.modules.game.mapper.admin.NoticeMapper;
 public class NoticeService extends CrudService<NoticeMapper, Notice> {
 	@Autowired
 	NoticeMapper mapper;
-	public List<Notice> getNotice(){
-		return mapper.getNotice();
-	}
 	public Notice get(String id) {
 		return super.get(id);
 	}

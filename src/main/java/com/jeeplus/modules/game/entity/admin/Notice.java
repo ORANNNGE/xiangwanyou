@@ -10,14 +10,14 @@ import com.jeeplus.common.utils.excel.annotation.ExcelField;
 /**
  * 公告管理Entity
  * @author orange
- * @version 2018-08-06
+ * @version 2018-11-19
  */
 public class Notice extends DataEntity<Notice> {
 	
 	private static final long serialVersionUID = 1L;
 	private String name;		// 公告
 	private String picture;		// 公告图片
-	
+
 	public Notice() {
 		super();
 	}

@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <script>
 $(document).ready(function() {
-	$('#usersTable').bootstrapTable({
+	$('#sysInfoTable').bootstrapTable({
 		 
 		  //请求方法
                method: 'get',
@@ -34,7 +34,7 @@ $(document).ready(function() {
                //可供选择的每页的行数（*）    
                pageList: [10, 25, 50, 100],
                //这个接口需要处理bootstrap table传递的固定参数,并返回特定格式的json数据  
-               url: "${ctx}/game/admin/users/data",
+               url: "${ctx}/game/admin/sysInfo/data",
                //默认值为 'limit',传给服务端的参数为：limit, offset, search, sort, order Else
                //queryParamsType:'',   
                ////查询参数,每次调用是会带上这个参数，可自定义                         
@@ -54,11 +54,11 @@ $(document).ready(function() {
                    if($el.data("item") == "edit"){
                    	edit(row.id);
                    } else if($el.data("item") == "delete"){
-                        jp.confirm('确认要删除该用户记录吗？', function(){
+                        jp.confirm('确认要删除该系统通知记录吗？', function(){
                        	jp.loading();
-                       	jp.get("${ctx}/game/admin/users/delete?id="+row.id, function(data){
+                       	jp.get("${ctx}/game/admin/sysInfo/delete?id="+row.id, function(data){
                    	  		if(data.success){
-                   	  			$('#usersTable').bootstrapTable('refresh');
+                   	  			$('#sysInfoTable').bootstrapTable('refresh');
                    	  			jp.success(data.msg);
                    	  		}else{
                    	  			jp.error(data.msg);
@@ -77,8 +77,8 @@ $(document).ready(function() {
 		       
 		    }
 			,{
-		        field: 'phoneNum',
-		        title: '用户手机号',
+		        field: 'name',
+		        title: '标题',
 		        sortable: true
 		        ,formatter:function(value, row , index){
 		        	return "<a href='javascript:edit(\""+row.id+"\")'>"+value+"</a>";
@@ -86,86 +86,14 @@ $(document).ready(function() {
 		       
 		    }
 			,{
-			   field: 'gameGroup',
-			   title: '分组',
-			   sortable: true,
-			   formatter:function(value, row , index){
-				   return jp.getDictLabel(${fns:toJson(fns:getDictList('game_group'))}, value, "-");
-			   }
-
-			}
-		   ,{
-			   field: 'referrer.realName',
-			   title: '推荐人',
-			   sortable: true
-
-		   }
-			,{
-		        field: 'balance',
-		        title: '余额',
+		        field: 'content',
+		        title: '消息',
 		        sortable: true
 		       
 		    }
 			,{
-		        field: 'realName',
-		        title: '真实姓名',
-		        sortable: true
-		       
-		    }
-			,{
-		        field: 'sex',
-		        title: '性别',
-		        sortable: true,
-		        formatter:function(value, row , index){
-		        	return jp.getDictLabel(${fns:toJson(fns:getDictList('sex'))}, value, "-");
-		        }
-		       
-		    }
-			,{
-		        field: 'idcard',
-		        title: '身份证',
-		        sortable: true
-		       
-		    }
-			,{
-		        field: 'alipayName',
-		        title: '支付宝昵称',
-		        sortable: true
-		       
-		    }
-			,{
-		        field: 'alipayAccount',
-		        title: '支付宝账号',
-		        sortable: true
-		       
-		    }
-			,{
-		        field: 'area',
-		        title: '地区',
-		        sortable: true
-		       
-		    }
-			,{
-		        field: 'phoneOS',
-		        title: '手机操作系统',
-		        sortable: true,
-		        formatter:function(value, row , index){
-		        	return jp.getDictLabel(${fns:toJson(fns:getDictList('phone_os'))}, value, "-");
-		        }
-		       
-		    }
-			,{
-		        field: 'status',
-		        title: '状态',
-		        sortable: true,
-		        formatter:function(value, row , index){
-		        	return jp.getDictLabel(${fns:toJson(fns:getDictList('user_status'))}, value, "-");
-		        }
-		       
-		    }
-			,{
-		        field: 'expireDate',
-		        title: '到期时间',
+		        field: 'users.realName',
+		        title: '用户',
 		        sortable: true
 		       
 		    }
@@ -183,14 +111,13 @@ $(document).ready(function() {
 	  if(navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)){//如果是移动端
 
 		 
-		  $('#usersTable').bootstrapTable("toggleView");
+		  $('#sysInfoTable').bootstrapTable("toggleView");
 		}
 	  
-	  $('#usersTable').on('check.bs.table uncheck.bs.table load-success.bs.table ' +
+	  $('#sysInfoTable').on('check.bs.table uncheck.bs.table load-success.bs.table ' +
                 'check-all.bs.table uncheck-all.bs.table', function () {
-            $('#remove').prop('disabled', ! $('#usersTable').bootstrapTable('getSelections').length);
-            $('#updateState').prop('disabled', ! $('#usersTable').bootstrapTable('getSelections').length);
-            $('#edit').prop('disabled', $('#usersTable').bootstrapTable('getSelections').length!=1);
+            $('#remove').prop('disabled', ! $('#sysInfoTable').bootstrapTable('getSelections').length);
+            $('#edit').prop('disabled', $('#sysInfoTable').bootstrapTable('getSelections').length!=1);
         });
 		  
 		$("#btnImport").click(function(){
@@ -201,7 +128,7 @@ $(document).ready(function() {
 			    content:$("#importBox").html() ,
 			    btn: ['下载模板','确定', '关闭'],
 				    btn1: function(index, layero){
-					  window.location='${ctx}/game/admin/users/import/template';
+					  window.location='${ctx}/game/admin/sysInfo/import/template';
 				  },
 			    btn2: function(index, layero){
 				        var inputForm =top.$("#importForm");
@@ -221,65 +148,52 @@ $(document).ready(function() {
 		});
 		    
 	  $("#search").click("click", function() {// 绑定查询按扭
-		  $('#usersTable').bootstrapTable('refresh');
+		  $('#sysInfoTable').bootstrapTable('refresh');
 		});
 	 
 	 $("#reset").click("click", function() {// 绑定查询按扭
 		  $("#searchForm  input").val("");
 		  $("#searchForm  select").val("");
 		  $("#searchForm  .select-item").html("");
-		  $('#usersTable').bootstrapTable('refresh');
+		  $('#sysInfoTable').bootstrapTable('refresh');
 		});
 		
 		
 	});
 		
   function getIdSelections() {
-        return $.map($("#usersTable").bootstrapTable('getSelections'), function (row) {
+        return $.map($("#sysInfoTable").bootstrapTable('getSelections'), function (row) {
             return row.id
         });
     }
   
-  function deleteAll() {
+  function deleteAll(){
 
-      jp.confirm('确认要删除该用户记录吗？', function () {
-          jp.loading();
-          jp.get("${ctx}/game/admin/users/deleteAll?ids=" + getIdSelections(), function (data) {
-              if (data.success) {
-                  $('#usersTable').bootstrapTable('refresh');
-                  jp.success(data.msg);
-              } else {
-                  jp.error(data.msg);
-              }
-          })
-
-      })
-  }
-  function updateAll(){
-		jp.confirm('确认要升级该用户吗？', function(){
-			jp.loading();
-			jp.get("${ctx}/game/admin/users/updataAll?ids=" + getIdSelections(), function(data){
+		jp.confirm('确认要删除该系统通知记录吗？', function(){
+			jp.loading();  	
+			jp.get("${ctx}/game/admin/sysInfo/deleteAll?ids=" + getIdSelections(), function(data){
          	  		if(data.success){
-         	  			$('#usersTable').bootstrapTable('refresh');
+         	  			$('#sysInfoTable').bootstrapTable('refresh');
          	  			jp.success(data.msg);
          	  		}else{
          	  			jp.error(data.msg);
          	  		}
          	  	})
+          	   
 		})
   }
    function add(){
-	  jp.openDialog('新增用户', "${ctx}/game/admin/users/form",'800px', '500px', $('#usersTable'));
+	  jp.openDialog('新增系统通知', "${ctx}/game/admin/sysInfo/form",'800px', '500px', $('#sysInfoTable'));
   }
   function edit(id){//没有权限时，不显示确定按钮
   	  if(id == undefined){
 			id = getIdSelections();
 		}
-	   <shiro:hasPermission name="game:admin:users:edit">
-	  jp.openDialog('编辑用户', "${ctx}/game/admin/users/form?id=" + id,'800px', '500px', $('#usersTable'));
+	   <shiro:hasPermission name="game:admin:sysInfo:edit">
+	  jp.openDialog('编辑系统通知', "${ctx}/game/admin/sysInfo/form?id=" + id,'800px', '500px', $('#sysInfoTable'));
 	   </shiro:hasPermission>
-	  <shiro:lacksPermission name="game:admin:users:edit">
-	  jp.openDialogView('查看用户', "${ctx}/game/admin/users/form?id=" + id,'800px', '500px', $('#usersTable'));
+	  <shiro:lacksPermission name="game:admin:sysInfo:edit">
+	  jp.openDialogView('查看系统通知', "${ctx}/game/admin/sysInfo/form?id=" + id,'800px', '500px', $('#sysInfoTable'));
 	  </shiro:lacksPermission>
   }
 

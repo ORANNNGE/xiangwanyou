@@ -226,11 +226,11 @@ $(document).ready(function() {
 	}
 	//计算提现金额
 	function sumAll(){
-			// jp.confirm('确认要计算所选的提现吗？', function(){
+			// jp.confirm('确认要计算所选用户提现金额吗？', function(){
 				jp.loading();
 				jp.get("${ctx}/game/admin/withdraw/sumAll?ids=" + getIdSelections(), function(data){
 					if(data.success){
-						$('#withdrawTable').bootstrapTable('refresh');
+						// $('#withdrawTable').bootstrapTable('refresh');
 						jp.alert(data.msg);
 					}else{
 						jp.error(data.msg);

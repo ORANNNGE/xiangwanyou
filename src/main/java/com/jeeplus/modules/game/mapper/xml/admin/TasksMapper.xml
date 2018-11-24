@@ -53,6 +53,9 @@
 			<if test="code != null and code != ''">
 				AND a.code = #{code}
 			</if>
+			<if test="gameGroup != null and gameGroup != ''">
+				AND a.game_group = #{gameGroup}
+			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
@@ -168,6 +171,12 @@
 		SELECT
 		<include refid="tasksColumns"/>
 		FROM game_tasks a
+		<where>
+			a.del_flag = '0'
+			<if test="gameGroup != null and gameGroup != ''">
+				and a.game_group not like concat('%',#{gameGroup},'%')
+			</if>
+		</where>
 		order by
 		create_date
 		desc
@@ -179,25 +188,45 @@
 		<include refid="tasksColumns"/>
 		FROM game_tasks a
 		<include refid="tasksJoins"/>
+		<where>
+			a.del_flag = '0'
+		<if test="gameGroup != null and gameGroup != ''">
+			 and a.game_group not like concat('%',#{gameGroup},'%')
+		</if>
+		</where>
 	</select>
 
 	<select id="getTodayTasks" resultType="Tasks">
 		SELECT
 		<include refid="tasksColumns"/>
 		FROM game_tasks a
-		where
-		TIMESTAMPDIFF(second,create_date,now())
-		between 0 and 86400
+		<where>
+			a.del_flag = '0'
+			and
+			a.expire_hours = 24
+			and
+			TIMESTAMPDIFF(second,create_date,now())
+			between 0 and 86400
+			<if test="gameGroup != null and gameGroup != ''">
+				and a.game_group not like concat('%',#{gameGroup},'%')
+			</if>
+		</where>
 	</select>
 
 	<select id="getLimitTasks" resultType="Tasks">
 		SELECT
 		<include refid="tasksColumns"/>
 		FROM game_tasks a
-		where
-		a.expire_hours != 24
-		and
-		TIMESTAMPDIFF(second,create_date,now())
-		between 0 and a.expire_hours*3600
+		<where>
+			a.del_flag = '0'
+			and
+			a.expire_hours != 24
+			and
+			TIMESTAMPDIFF(second,create_date,now())
+			between 0 and a.expire_hours*3600
+			<if test="gameGroup != null and gameGroup != ''">
+				and a.game_group not like concat('%',#{gameGroup},'%')
+			</if>
+		</where>
 	</select>
 </mapper>

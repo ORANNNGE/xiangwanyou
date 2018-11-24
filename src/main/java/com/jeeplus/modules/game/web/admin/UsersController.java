@@ -13,6 +13,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 
+import com.jeeplus.modules.game.entity.admin.PromoAward;
+import com.jeeplus.modules.game.service.admin.PromoAwardService;
+import com.jeeplus.modules.game.util.MyResourceUtil;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +52,8 @@ public class UsersController extends BaseController {
 
 	@Autowired
 	private UsersService usersService;
-	
+	@Autowired
+	private PromoAwardService promoAwardService;
 	@ModelAttribute
 	public Users get(@RequestParam(required=false) String id) {
 		Users entity = null;
@@ -61,7 +65,7 @@ public class UsersController extends BaseController {
 		}
 		return entity;
 	}
-	
+
 	/**
 	 * 用户列表页面
 	 */
@@ -70,15 +74,15 @@ public class UsersController extends BaseController {
 	public String list() {
 		return "modules/game/admin/usersList";
 	}
-	
-		/**
+
+	/**
 	 * 用户列表数据
 	 */
 	@ResponseBody
 	@RequiresPermissions("game:admin:users:list")
 	@RequestMapping(value = "data")
 	public Map<String, Object> data(Users users, HttpServletRequest request, HttpServletResponse response, Model model) {
-		Page<Users> page = usersService.findPage(new Page<Users>(request, response), users); 
+		Page<Users> page = usersService.findPage(new Page<Users>(request, response), users);
 		return getBootstrapData(page);
 	}
 
@@ -110,7 +114,7 @@ public class UsersController extends BaseController {
 		j.setMsg("保存用户成功");
 		return j;
 	}
-	
+
 	/**
 	 * 删除用户
 	 */
@@ -123,7 +127,7 @@ public class UsersController extends BaseController {
 		j.setMsg("删除用户成功");
 		return j;
 	}
-	
+
 	/**
 	 * 批量删除用户
 	 */
@@ -150,6 +154,12 @@ public class UsersController extends BaseController {
 	public AjaxJson updataAll(String ids, RedirectAttributes redirectAttributes) {
 		AjaxJson j = new AjaxJson();
 		String idArray[] =ids.split(",");
+
+		Double directAward = Double.valueOf(MyResourceUtil.getConfigByName("directAward"));//一级返利金额
+		Double indirectAward = Double.valueOf(MyResourceUtil.getConfigByName("indirectAward"));//二级返利金额
+
+//		Users directAwardUser = null;
+//		Users indirectAwardUser = null;
 		for(String id : idArray){
 			Users u = usersService.get(id);
 			//升级成会员
@@ -159,42 +169,73 @@ public class UsersController extends BaseController {
 			calendar.setTime(new Date());
 			calendar.add(Calendar.YEAR, 1);
 			u.setExpireDate(calendar.getTime());
-			//更新用户
+
+			if(u.getReferrer() != null){
+				Users directUser = u.getReferrer();
+				directUser = usersService.get(directUser.getId());
+				promoAward(u,directAward,"1");
+				if(directUser.getReferrer() != null){//间接推广奖励
+					promoAward(directUser, indirectAward,"2");
+				}
+			}
+
 			usersService.save(u);
 		}
 		j.setMsg("更新用户成功");
 		return j;
 	}
 
+	private void promoAward(Users u,Double award,String type){
+		Users directAwardUser = null;//直接推荐人
+		Users indirectAwardUser = null;//间接推荐人
+
+//		Double directAward = Double.valueOf(MyResourceUtil.getConfigByName("directAward"));//直接返利
+//		Double indirectAward = Double.valueOf(MyResourceUtil.getConfigByName("indirectAward"));//间接返利
+
+		directAwardUser = usersService.get(u.getReferrer().getId());
+		Double balance = directAwardUser.getBalance();
+		directAwardUser.setBalance(balance + award);
+
+		//添加到推广业绩
+		PromoAward promoAward = new PromoAward();
+		promoAward.setReferrer(directAwardUser);
+		promoAward.setUsers(u);
+		promoAward.setAward(award);
+		promoAward.setType(type);
+
+		//更新用户
+		promoAwardService.save(promoAward);
+		usersService.save(directAwardUser);
+	}
 	/**
 	 * 导出excel文件
 	 */
 	@ResponseBody
 	@RequiresPermissions("game:admin:users:export")
-    @RequestMapping(value = "export", method=RequestMethod.POST)
-    public AjaxJson exportFile(Users users, HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes) {
+	@RequestMapping(value = "export", method=RequestMethod.POST)
+	public AjaxJson exportFile(Users users, HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes) {
 		AjaxJson j = new AjaxJson();
 		try {
-            String fileName = "用户"+DateUtils.getDate("yyyyMMddHHmmss")+".xlsx";
-            Page<Users> page = usersService.findPage(new Page<Users>(request, response, -1), users);
-    		new ExportExcel("用户", Users.class).setDataList(page.getList()).write(response, fileName).dispose();
-    		j.setSuccess(true);
-    		j.setMsg("导出成功！");
-    		return j;
+			String fileName = "用户"+DateUtils.getDate("yyyyMMddHHmmss")+".xlsx";
+			Page<Users> page = usersService.findPage(new Page<Users>(request, response, -1), users);
+			new ExportExcel("用户", Users.class).setDataList(page.getList()).write(response, fileName).dispose();
+			j.setSuccess(true);
+			j.setMsg("导出成功！");
+			return j;
 		} catch (Exception e) {
 			j.setSuccess(false);
 			j.setMsg("导出用户记录失败！失败信息："+e.getMessage());
 		}
-			return j;
-    }
+		return j;
+	}
 
 	/**
 	 * 导入Excel数据
 
 	 */
 	@RequiresPermissions("game:admin:users:import")
-    @RequestMapping(value = "import", method=RequestMethod.POST)
-    public String importFile(MultipartFile file, RedirectAttributes redirectAttributes) {
+	@RequestMapping(value = "import", method=RequestMethod.POST)
+	public String importFile(MultipartFile file, RedirectAttributes redirectAttributes) {
 		try {
 			int successNum = 0;
 			int failureNum = 0;
@@ -219,23 +260,23 @@ public class UsersController extends BaseController {
 			addMessage(redirectAttributes, "导入用户失败！失败信息："+e.getMessage());
 		}
 		return "redirect:"+Global.getAdminPath()+"/game/admin/users/?repage";
-    }
-	
+	}
+
 	/**
 	 * 下载导入用户数据模板
 	 */
 	@RequiresPermissions("game:admin:users:import")
-    @RequestMapping(value = "import/template")
-    public String importFileTemplate(HttpServletResponse response, RedirectAttributes redirectAttributes) {
+	@RequestMapping(value = "import/template")
+	public String importFileTemplate(HttpServletResponse response, RedirectAttributes redirectAttributes) {
 		try {
-            String fileName = "用户数据导入模板.xlsx";
-    		List<Users> list = Lists.newArrayList(); 
-    		new ExportExcel("用户数据", Users.class, 1).setDataList(list).write(response, fileName).dispose();
-    		return null;
+			String fileName = "用户数据导入模板.xlsx";
+			List<Users> list = Lists.newArrayList();
+			new ExportExcel("用户数据", Users.class, 1).setDataList(list).write(response, fileName).dispose();
+			return null;
 		} catch (Exception e) {
 			addMessage(redirectAttributes, "导入模板下载失败！失败信息："+e.getMessage());
 		}
 		return "redirect:"+Global.getAdminPath()+"/game/admin/users/?repage";
-    }
+	}
 
 }

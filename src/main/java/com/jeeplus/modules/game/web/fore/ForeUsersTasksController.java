@@ -123,7 +123,6 @@ public class ForeUsersTasksController {
 	
 	/**
 	 * 用户抢任务 ,新增UsersTasksItem
-	 * @param usersid
 	 * @param tasksid
 	 * @return
 	 */
@@ -169,7 +168,7 @@ public class ForeUsersTasksController {
 	public String index(Model model){
 		//查询任务
 		System.out.println("---------------");
-		List<Tasks> tasks = tasksService.listTasks();
+		List<Tasks> tasks = tasksService.listTasks("");
 		for (Tasks tasks2 : tasks) {
 			tasks2.setIcon(tasks2.getIcon().substring(10, tasks2.getIcon().length()));
 			System.out.println(tasks2.toString());
@@ -177,7 +176,7 @@ public class ForeUsersTasksController {
 		//Collections.reverse(tasks);
 		//任务统计
 		List<TasksStat> stats = tasksStatService.selectStat();
-		List<Notice> notices = noticeService.getNotice();
+		List<Notice> notices = noticeService.findList(new Notice());
 		for (Notice notice : notices) {
 			notice.setPicture(notice.getPicture().substring(10, notice.getPicture().length()));
 		}
