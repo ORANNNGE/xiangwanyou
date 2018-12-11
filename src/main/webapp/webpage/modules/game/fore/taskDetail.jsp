@@ -107,7 +107,6 @@
 		            dataType: 'json',   
 		            maxFileSize: 2097152*3,  
 		            done: function (e, data) {
-		            	console.log(123456);
 		            	var uploadPath = data.result.data;
 		            	console.log("done-data:"+uploadPath);
 		            	$("#uploadIcon").attr("src","../"+uploadPath);

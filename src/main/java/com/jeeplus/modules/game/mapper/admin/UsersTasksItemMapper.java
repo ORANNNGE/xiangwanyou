@@ -18,7 +18,7 @@ import java.util.List;
 @MyBatisMapper
 public interface UsersTasksItemMapper extends BaseMapper<UsersTasksItem> {
 	void updateBatchPassItem(List  ids);
-	void updateUsersTasksItem(@Param(value="imgUrl")String imgUrl, @Param(value="commitContent")String commitContent, @Param(value="usersTasksId")String usersTasksId, @Param(value="state")String state);
+	void updateUsersTasksItem( @Param(value="imgUrl") String imgUrl, @Param(value="commitContent")String commitContent, @Param(value="usersTasksId")String usersTasksId, @Param(value="state")String state);
 	List<UsersTasksItem> selectByUsersIdAndTasksId(@Param(value="usersId")String usersId, @Param(value="tasksId")String tasksId);
 	List<UsersTasksItem> selectByUsersId(String usersId);
 	List<UsersTasksItem> selectPassed(String usersId);

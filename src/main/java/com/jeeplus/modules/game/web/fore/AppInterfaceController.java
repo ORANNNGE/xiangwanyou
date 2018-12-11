@@ -189,14 +189,9 @@ public class AppInterfaceController {
 	@RequestMapping(value="register")
 	@ResponseBody
 	public AppResponse<String> register(Users users,String verifyCode,HttpServletRequest req,HttpServletResponse response) {
-//		System.out.println(users.toString());
 		//验证唯一性
 		HttpSession session =req. getSession();
-//		System.out.println("****register sessionid"+session.getId());
-//		System.out.println(" request.getRequestedSessionId()"+ req.getRequestedSessionId());
 		String code = (String) session.getAttribute("code");
-//		System.out.println("****code:"+code);
-//		System.out.println("verifyCode:"+verifyCode);
 		Users uniUser = usersService.findUniqueByProperty("phone_num", users.getPhoneNum());
 		if(uniUser == null) {
 			//加密密码，并且存入数据库
@@ -685,7 +680,8 @@ public class AppInterfaceController {
 		}
 		return new AppResponse<>(0,"查询到0项",null);
 	}
-	
+
+
 	/**
 	 * 个人中心 通知
 	 * 原通知是查询出来通过和没通过审核的任务，返回为前台，前台将任务名、任务的期数、最后更新的时间、是否通过审核显示出来。

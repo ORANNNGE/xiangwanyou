@@ -176,6 +176,7 @@
 		<include refid="usersTasksItemJoins"/>
 		where
 		users_id=#{usersId}
+		order by a.create_date desc
 	</select>
 	<select id="selectPassed" resultType="UsersTasksItem">
 		select
@@ -186,6 +187,7 @@
 		users_id=#{usersId}
 		and
 		state = '3'
+		order by a.create_date desc
 	</select>
 	<select id="selectPassedAndNot" resultType="UsersTasksItem">
 		select
@@ -198,6 +200,7 @@
 		(state = '3'
 		or
 		state = '4')
+		order by a.create_date desc
 	</select>
 
 	<update id="updateBatchPassItem">

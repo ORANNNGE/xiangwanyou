@@ -5,6 +5,7 @@ package com.jeeplus.modules.game.service.admin;
 
 import java.util.List;
 
+import com.jeeplus.common.utils.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +37,9 @@ public class UsersService extends CrudService<UsersMapper, Users> {
 	
 	@Transactional(readOnly = false)
 	public void save(Users users) {
+		if(StringUtils.isEmpty(users.getGameGroup()) &&  !"1".equals(users.getGameGroup())){
+			users.setGameGroup("2");
+		}
 		super.save(users);
 	}
 	
